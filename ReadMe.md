@@ -1,9 +1,11 @@
 # LiGu's AI of Game
 
+[TOC]
+
 ## [Go 围棋](Go.md)
 * AI Algorithm: [Montecarlo Tree Search](Monte_Carlo_Tree_Search.md)  
-* ![Image text](img/围棋-vs野狐中下12级.png)
-* ![Image text](img/20201122182136.png)
+* <img src="assets/围棋-vs野狐中下12级.png" alt="Image text" style="zoom: 25%;" />
+* <img src="assets/20201122182136.png" alt="Image text" style="zoom: 45%;" />
 * Operate
   - Press mouse left button: move stone
   - Press mouse middle button: return to the previous state
@@ -16,10 +18,10 @@
 
 ## [GoBang 五子棋](Gobang.md) 
 * AI Algorithm: [Decision Tree, Minimax, alpha-beta Prune](Minimax.md)  
-* ![Image text](img/20201122183254.png)
+* <img src="assets/20201122183254.png" alt="Image text" style="zoom:33%;" />
 
 ## [Chess 象棋](Chess.md) 
-* ![Image text](img/Chess_20230112143922.png)
+* <img src="assets/Chess_20230112143922.png" alt="Image text" style="zoom: 50%;" />
 * Operate
   - Press mouse left button: move stone
   - Press mouse middle button: return to the previous state
