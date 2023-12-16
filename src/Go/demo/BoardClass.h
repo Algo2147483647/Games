@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QWidget>
 #include <QLabel>
-#include "C:/Users/29753/Desktop/Projects/Games/src/Go/Go.h"
+#include "./core/Go.h"
 
 class BoardClass : public QWidget
 {
@@ -81,8 +81,8 @@ protected:
 
         for (int i = 0; i < 9; i++) {
             painter.drawEllipse(
-                boardMargin + gridSize * (star[i][0] + BOARDSIZE / 2) - starSize / 2,
-                boardMargin + gridSize * (star[i][1] + BOARDSIZE / 2) - starSize / 2,
+                boardMargin + gridSize * (star[i][0] + BOARD_SIZE / 2) - starSize / 2,
+                boardMargin + gridSize * (star[i][1] + BOARD_SIZE / 2) - starSize / 2,
                 starSize, starSize
             );
         }

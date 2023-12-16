@@ -28,12 +28,12 @@ namespace Go {
 			open.pop();
 
 			for (auto j = 0; j < 4; j++) {
-				int xt = v % BOARDSIZE + adj_x[j],
-					yt = v / BOARDSIZE + adj_y[j],
-					vt = yt * BOARDSIZE + xt;
+				int xt = v % BOARD_SIZE + adj_x[j],
+					yt = v / BOARD_SIZE + adj_y[j],
+					vt = yt * BOARD_SIZE + xt;
 
-				if (xt >= 0 && xt < BOARDSIZE &&
-					yt >= 0 && yt < BOARDSIZE &&
+				if (xt >= 0 && xt < BOARD_SIZE &&
+					yt >= 0 && yt < BOARD_SIZE &&
 					!bd[vt] && board[vt] == EMPTY) {
 					reachable++;
 					bd[vt] = true;

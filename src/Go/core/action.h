@@ -30,12 +30,12 @@ namespace Go {
 	 */
 	inline bool isSuicide(State& s) {
 		for (int j = 0; j < 4; j++) {
-			int xt = s.action % BOARDSIZE + adj_x[j],
-				yt = s.action / BOARDSIZE + adj_y[j],
-				vt = yt * BOARDSIZE + xt;
+			int xt = s.action % BOARD_SIZE + adj_x[j],
+				yt = s.action / BOARD_SIZE + adj_y[j],
+				vt = yt * BOARD_SIZE + xt;
 
-			if (xt < 0 || xt >= BOARDSIZE ||
-				yt < 0 || yt >= BOARDSIZE)
+			if (xt < 0 || xt >= BOARD_SIZE ||
+				yt < 0 || yt >= BOARD_SIZE)
 				continue;
 
 			//ºËÐÄÅÐ¶Ï

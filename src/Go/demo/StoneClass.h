@@ -10,12 +10,13 @@
 #include <QThread> 
 #include <QMessageBox>
 #include <stdio.h>
-#include "../Go.h"
 #include "BoardClass.h"
-#include "ThreadClass.h"
+//#include "ThreadClass.h"
 
 class StoneClass : public QWidget
 {
+    Q_OBJECT
+
 public:
     StoneClass(QWidget* parent);
 

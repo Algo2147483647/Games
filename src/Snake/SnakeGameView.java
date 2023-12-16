@@ -1,8 +1,8 @@
-import java.awt.*;
 import javax.swing.*;
-import java.util.*;
-import java.awt.event.*;
 import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
 public class SnakeGameView extends JFrame{
 	
@@ -27,7 +27,7 @@ public class SnakeGameView extends JFrame{
 	public void showView() {
 		this.setBounds(ViewSize()/2,ViewSize()/2, VIEW_WIDTH, VIEW_WIDTH+30-2);
 		this.setTitle("Snake");
-		Image img = new ImageIcon("C:\\Users\\ÐÜè÷ºÀ\\Desktop\\Snake\\image\\logo.jpg").getImage();
+		Image img = new ImageIcon("C:\\Users\\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\\Desktop\\Snake\\image\\logo.jpg").getImage();
 		this.setIconImage(img);
 		
 		snake.setEgg(egg);

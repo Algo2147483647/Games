@@ -15,8 +15,8 @@ StoneClass::StoneClass(QWidget* parent) : QWidget(parent) {
 
     setFocusPolicy(Qt::StrongFocus);
 
-    GoAI::evaluate_result.resize(BOARDNUM, 0);
-    GoAI::evaluate_visit. resize(BOARDNUM, 0);
+    //GoAI::evaluate_result.resize(BOARDNUM, 0);
+    //GoAI::evaluate_visit. resize(BOARDNUM, 0);
 }
 
 /*
@@ -29,7 +29,7 @@ void StoneClass::mousePressEvent(QMouseEvent* e) {
         x = (e->x() - BoardClass::boardMargin + BoardClass::gridSize / 2) / BoardClass::gridSize;
         y = (e->y() - BoardClass::boardMargin + BoardClass::gridSize / 2) / BoardClass::gridSize;
 
-        Go::State* s_ = Go::nextState(*state, y * BOARDSIZE + x);
+        Go::State* s_ = Go::nextState(*state, y * BOARD_SIZE + x);
         if (s_ == NULL)
             return;
 
@@ -39,7 +39,7 @@ void StoneClass::mousePressEvent(QMouseEvent* e) {
         displayWin();
 
         if (ai_is_open)
-            GoAI::move_pos = y * BOARDSIZE + x;
+            //GoAI::move_pos = y * BOARD_SIZE + x;
 
         StoneWarn->setGeometry(
             BoardClass::boardMargin + x * BoardClass::gridSize - stoneSize / 2,
@@ -84,7 +84,7 @@ void StoneClass::keyPressEvent(QKeyEvent* event) {
             displayWin();
 
             if (ai_is_open) {
-                GoAI::move_pos = -1;
+                //GoAI::move_pos = -1;
             }
         }
     } break;
@@ -92,16 +92,16 @@ void StoneClass::keyPressEvent(QKeyEvent* event) {
 }
 
 void StoneClass::openAI() {  
-    static ThreadClass ai;
+    //static ThreadClass ai;
     static QThread thread;
 
     if (ai_is_open == 0) {
         ai_is_open = 1;
-        ai.s = state;
+        //ai.s = state;
 
-        QObject::connect(&thread, &QThread::started, &ai, &ThreadClass::openAI);
-        ai.moveToThread(&thread);
-        thread.start();
+       // QObject::connect(&thread, &QThread::started, &ai, &ThreadClass::openAI);
+        //ai.moveToThread(&thread);
+        //thread.start();
     }
     return;
 }
@@ -127,28 +127,28 @@ void StoneClass::aiEvaluate() {
     int maxi = 0;
 
     if (fg == 1) {
-        GoAI::evaluate_fg = 1;
+        //GoAI::evaluate_fg = 1;
         QThread::msleep(50);
 
-        for (int i = 0; i < BOARDNUM; i++)
-            if (state->mark[i] == -1 && maxn < GoAI::evaluate_result[i]) {
-                maxn = GoAI::evaluate_result[i];
-                maxi = i;
-            } 
+        //for (int i = 0; i < BOARDNUM; i++)
+            //if (state->mark[i] == -1 && maxn < GoAI::evaluate_result[i]) {
+                //maxn = GoAI::evaluate_result[i];
+                //maxi = i;
+            //} 
     } 
 
     for (int i = 0; i < BOARDNUM; i++) {
         if ((state->mark[i] == -1) && fg == 1) {
-            int x = i % BOARDSIZE,
-                y = i / BOARDSIZE,
-                v = GoAI::evaluate_result[i] * 100;   
+            int x = i % BOARD_SIZE,
+                y = i / BOARD_SIZE;
+                //v = GoAI::evaluate_result[i] * 100
 
             if(i == maxi)
                 labels[i]->setStyleSheet("color:Red");
             else  
                 labels[i]->setStyleSheet("color:Blue");
 
-            labels[i]->setText(QString::fromStdString(to_string(v)));
+            //labels[i]->setText(QString::fromStdString(to_string(v)));
             labels[i]->setGeometry(
                 BoardClass::boardMargin + BoardClass::gridSize * (x - 0.36),
                 BoardClass::boardMargin + BoardClass::gridSize * (y - 0.35), 30, 30);
@@ -179,17 +179,17 @@ void StoneClass::aiEvaluate_visit() {
     }
 
     if (fg == 1) {
-        GoAI::evaluate_fg = 1;
+        //GoAI::evaluate_fg = 1;
         QThread::msleep(50);
     }
 
     for (int i = 0; i < BOARDNUM; i++) {
         if ((state->mark[i] == -1) && fg == 1) {
-            int x = i % BOARDSIZE,
-                y = i / BOARDSIZE,
-                v = GoAI::evaluate_visit[i];
+            int x = i % BOARD_SIZE,
+                y = i / BOARD_SIZE;
+                //v = GoAI::evaluate_visit[i]
 
-            labels[i]->setText(QString::fromStdString(to_string(v)));
+            //labels[i]->setText(QString::fromStdString(to_string(v)));
             labels[i]->setGeometry(
                 BoardClass::boardMargin + BoardClass::gridSize * (x - 0.36),
                 BoardClass::boardMargin + BoardClass::gridSize * (y - 0.35), 30, 30);
@@ -209,10 +209,10 @@ void StoneClass::displayWin() {
 
     // if win
     if (Go::isTermination(*state)) {
-        if (Go::computeReward(*state) == BLACK) 
-            win = BLACK;
+        if (Go::computeReward(*state) == Go::BLACK) 
+            win = Go::BLACK;
         else 
-            win = WHITE;
+            win = Go::WHITE;
     }
 
     if (win != 0) {
@@ -221,9 +221,9 @@ void StoneClass::displayWin() {
         WinLable->setFont(font);
         WinLable->setGeometry(20, 20, 1000, 100);
 
-        if (win == BLACK)
+        if (win == Go::BLACK)
             WinLable->setText("BLACK Win");
-        else if (win == WHITE)
+        else if (win == Go::WHITE)
             WinLable->setText("WHITE Win");
     }
 }
@@ -236,15 +236,15 @@ void StoneClass::displayStone(array<Go::Color, BOARDNUM>& board) {
 
     for (int i = 0; i < BOARDNUM; i++) {
         if (board[i] != 0) {
-            int x = i % BOARDSIZE,
-                y = i / BOARDSIZE;
+            int x = i % BOARD_SIZE,
+                y = i / BOARD_SIZE;
 
             x = BoardClass::boardMargin + x * BoardClass::gridSize - stoneSize / 2;
             y = BoardClass::boardMargin + y * BoardClass::gridSize - stoneSize / 2;
 
             Stone[StoneCur]->setGeometry(x, y, stoneSize, stoneSize);
 
-            if (board[i] == BLACK)
+            if (board[i] == Go::BLACK)
                 Stone[StoneCur]->setStyleSheet(
                     "QLabel{background:#000000; border-radius: 16px; border:0px solid black;}"
                 );
@@ -281,8 +281,8 @@ void StoneClass::displayQi(Go::State& s) {
 
     for (int i = 0; i < BOARDNUM; i++) {
         if (s.board[i] != 0 && fg == 1) {
-            int x = i % BOARDSIZE,
-                y = i / BOARDSIZE;
+            int x = i % BOARD_SIZE,
+                y = i / BOARD_SIZE;
 
             labels[i]->setText(QString::fromStdString(to_string(s.qi[s.mark[i]])));
             labels[i]->setGeometry(
@@ -316,8 +316,8 @@ void StoneClass::displayMark(Go::State& s) {
 
     for (int i = 0; i < BOARDNUM; i++) {
         if (s.mark[i] >= 0 && fg == 1) {
-            int x = i % BOARDSIZE,
-                y = i / BOARDSIZE;
+            int x = i % BOARD_SIZE,
+                y = i / BOARD_SIZE;
 
             labels[i]->setText(QString::fromStdString(to_string(s.mark[i])));
             labels[i]->setGeometry(
@@ -369,8 +369,8 @@ void StoneClass::displayNumber(Go::State& s) {
             number[i] += sum;  
 
         if (s.board[i] != 0 && fg == 1) {
-            int x = i % BOARDSIZE,
-                y = i / BOARDSIZE;
+            int x = i % BOARD_SIZE,
+                y = i / BOARD_SIZE;
 
             labels[i]->setText(QString::fromStdString(to_string(number[i])));
             labels[i]->setGeometry(

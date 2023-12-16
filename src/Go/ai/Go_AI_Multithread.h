@@ -5,7 +5,8 @@
 #include <unordered_map>
 #include <algorithm>
 #include <thread>
-#include "Go.h"
+#include "./core/Go.h"
+#include "thread_pool.h"
 
 #define BANPOINT 0x7FFF
 #define EYEPOINT 0x7FFC
@@ -72,7 +73,7 @@ namespace GoAI {
 	 */
 	inline void MonteCarloTreeSearch(Go::State* s) {
 		Node* root = new Node(s, NULL);
-		thread threads[THREADNUM];
+		ThreadPool thread_pool(THREADNUM);
 
 		while (true) {
 			// API for outside
@@ -102,13 +103,12 @@ namespace GoAI {
 				nd = Select(nd, true);
 
 			for (int i = 0; i < THREADNUM; i++) {
-				threads[i] = thread(
-					ExpandSimulate, nd, i
-				);
+				thread_pool.addTask([nd, i]() {
+					ExpandSimulate(nd, i);
+				});
 			}
 			
-			for (auto& thread : threads)
-				thread.join();
+			thread_pool.wait_all();
 
 			// Backpropagate
 			int visit = 0,
@@ -143,12 +143,12 @@ namespace GoAI {
 			bool isBan = 1;
 
 			for (int j = 0; j < 4; j++) {
-				int xt = i % BOARDSIZE + Go::adj_x[j],
-					yt = i / BOARDSIZE + Go::adj_y[j],
-					vt = yt * BOARDSIZE + xt;
+				int xt = i % BOARD_SIZE + Go::adj_x[j],
+					yt = i / BOARD_SIZE + Go::adj_y[j],
+					vt = yt * BOARD_SIZE + xt;
 
-				if (xt < 0 || xt >= BOARDSIZE ||
-					yt < 0 || yt >= BOARDSIZE)
+				if (xt < 0 || xt >= BOARD_SIZE ||
+					yt < 0 || yt >= BOARD_SIZE)
 					continue;
 
 				//ºËÐÄÅÐ¶Ï

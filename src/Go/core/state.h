@@ -6,12 +6,6 @@
 using namespace std;
 
 namespace Go {
-
-	typedef char Color;
-
-	/*
-	 *  State & Action
-	 */
 	struct State {
 		// action (x, y, c)
 		short action = -2;
@@ -24,7 +18,7 @@ namespace Go {
 		State* parent = NULL;
 
 		State() {
-			fill(board.begin(),  board.end(), 0);
+			fill(board.begin(),  board.end(), EMPTY);
 			fill(mark.begin(),   mark.end(), -1);
 			fill(next.begin(),   next.end(), -1);
 			fill(qi.begin(),     qi.end(),    0);

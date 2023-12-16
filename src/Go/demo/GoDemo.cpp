@@ -1,7 +1,7 @@
 #include "GoDemo.h"
 
 GoDemo::GoDemo(QWidget* parent) : QMainWindow(parent) {
-    windowSize = BoardClass::gridSize * (BOARDSIZE + 0.5);
+    windowSize = BoardClass::gridSize * (BOARD_SIZE + 0.5);
     setMaximumSize(windowSize, windowSize);
     setMinimumSize(windowSize, windowSize);  //固定软件界面的大小
     setWindowTitle("Go");
@@ -9,7 +9,7 @@ GoDemo::GoDemo(QWidget* parent) : QMainWindow(parent) {
 
     // BoardClass 
     setGridWidget(BoardWidget);
-    boardClass = new BoardClass(BoardWidget, BOARDSIZE);
+    boardClass = new BoardClass(BoardWidget, BOARD_SIZE);
     boardClass->setGeometry(0, 0, windowSize, windowSize);
 
     // StoneClass 

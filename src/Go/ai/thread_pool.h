@@ -18,6 +18,9 @@ namespace GoAI {
 class ThreadPool {
 public:
     ThreadPool() = default;
+    ThreadPool(const int numThreads) {
+        init(numThreads);
+    }
     ~ThreadPool();
 
     void init(const int numThreads);
@@ -26,7 +29,7 @@ public:
 
     template <class F, class... Args>
     auto addTask(F&& f, Args&&... args)
-        -> future<typename result_of<F(Args...)>::type>;
+        -> future<typename invoke_result<F, Args...>::type>;
 
     void wait_all() {
         for (auto&& result : m_taskResults) {
@@ -82,13 +85,13 @@ inline void ThreadPool::addThread(function<void()> initalizer) {
  */
 template <class F, class... Args>
 auto ThreadPool::addTask(F&& f, Args&&... args)
--> future<typename result_of<F(Args...)>::type> {
-        
-    auto task = make_shared<packaged_task<result_of<F(Args...)>::type>()>> (
-        bind(forward<F>(f), forward<Args>(args)...)
-    );
+-> future<typename invoke_result<F, Args...>::type> {
 
-    future<result_of<F(Args...)>::type()> res = task->get_future();
+    auto task = make_shared<packaged_task<typename invoke_result<F, Args...>::type()>>(
+        bind(forward<F>(f), forward<Args>(args)...)
+        );
+
+    future<typename invoke_result<F, Args...>::type> res = task->get_future();
 
     {
         unique_lock<mutex> lock(m_mutex);

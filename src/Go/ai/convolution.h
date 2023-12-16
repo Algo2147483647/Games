@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include "Go.h"
-#include "C:/Users/29753/Desktop/External_Library/eigen/Eigen/Core"
+#include "eigen/Eigen/Core"
 
 using namespace std;
 

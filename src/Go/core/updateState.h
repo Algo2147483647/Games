@@ -22,12 +22,12 @@ namespace Go {
 			bufcur = 0;
 
 			for (int j = 0; j < 4; j++) {
-				int xt = i % BOARDSIZE + adj_x[j],
-					yt = i / BOARDSIZE + adj_y[j],
-					vt = yt * BOARDSIZE + xt;
+				int xt = i % BOARD_SIZE + adj_x[j],
+					yt = i / BOARD_SIZE + adj_y[j],
+					vt = yt * BOARD_SIZE + xt;
 
-				if (xt >= 0 && xt < BOARDSIZE &&
-					yt >= 0 && yt < BOARDSIZE && s.board[vt] != EMPTY)
+				if (xt >= 0 && xt < BOARD_SIZE &&
+					yt >= 0 && yt < BOARD_SIZE && s.board[vt] != EMPTY)
 					buf[bufcur++] = s.mark[vt];
 			}
 
@@ -57,22 +57,22 @@ namespace Go {
 
 		do {
 			for (int j = 0; j < 4; j++) {
-				int xt = i % BOARDSIZE + adj_x[j],
-					yt = i / BOARDSIZE + adj_y[j],
-					vt = yt * BOARDSIZE + xt,
+				int xt = i % BOARD_SIZE + adj_x[j],
+					yt = i / BOARD_SIZE + adj_y[j],
+					vt = yt * BOARD_SIZE + xt,
 					found = 0;;
 
-				if (xt < 0 || xt >= BOARDSIZE ||
-					yt < 0 || yt >= BOARDSIZE || s.board[vt] != EMPTY)
+				if (xt < 0 || xt >= BOARD_SIZE ||
+					yt < 0 || yt >= BOARD_SIZE || s.board[vt] != EMPTY)
 					continue;
 
 				for (int k = 0; k < 4; k++) {
 					int xt_ = xt + adj_x[k],
 						yt_ = yt + adj_y[k],
-						vt_ = yt_ * BOARDSIZE + xt_;
+						vt_ = yt_ * BOARD_SIZE + xt_;
 
-					if (xt_ >= 0 && xt_ < BOARDSIZE &&
-						yt_ >= 0 && yt_ < BOARDSIZE && s.mark[vt_] == id2) {
+					if (xt_ >= 0 && xt_ < BOARD_SIZE &&
+						yt_ >= 0 && yt_ < BOARD_SIZE && s.mark[vt_] == id2) {
 						found = 1;
 						break;
 					}			
@@ -108,12 +108,12 @@ namespace Go {
 		s.qi   [s.action] = 0;
 
 		for (int j = 0; j < 4; j++) {
-			int xt = s.action % BOARDSIZE + adj_x[j],
-				yt = s.action / BOARDSIZE + adj_y[j],
-				vt = yt * BOARDSIZE + xt;
+			int xt = s.action % BOARD_SIZE + adj_x[j],
+				yt = s.action / BOARD_SIZE + adj_y[j],
+				vt = yt * BOARD_SIZE + xt;
 
-			if (xt >= 0 && xt < BOARDSIZE &&
-				yt >= 0 && yt < BOARDSIZE && s.board[vt] == EMPTY)
+			if (xt >= 0 && xt < BOARD_SIZE &&
+				yt >= 0 && yt < BOARD_SIZE && s.board[vt] == EMPTY)
 				s.qi[s.action] ++;
 		}
 
@@ -121,12 +121,12 @@ namespace Go {
 		int buf[4], bufcur = 0;
 
 		for (int j = 0; j < 4; j++) {
-			int xt = s.action % BOARDSIZE + adj_x[j],
-				yt = s.action / BOARDSIZE + adj_y[j],
-				vt = yt * BOARDSIZE + xt;
+			int xt = s.action % BOARD_SIZE + adj_x[j],
+				yt = s.action / BOARD_SIZE + adj_y[j],
+				vt = yt * BOARD_SIZE + xt;
 
-			if (xt < 0 || xt >= BOARDSIZE ||
-				yt < 0 || yt >= BOARDSIZE || s.board[vt] == EMPTY)
+			if (xt < 0 || xt >= BOARD_SIZE ||
+				yt < 0 || yt >= BOARD_SIZE || s.board[vt] == EMPTY)
 				continue;
 
 			buf[bufcur++] = s.mark[vt];

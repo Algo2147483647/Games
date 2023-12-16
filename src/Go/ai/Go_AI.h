@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <thread>
-#include "C:/Users/29753/Desktop/Projects/Games/src/Go/Go.h"
+#include "./core/Go.h"
 
 namespace GoAI { 
 
@@ -46,7 +46,7 @@ namespace GoAI {
 
 		// generate action set randomly
 		void generateActionSet() {
-			for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++)
+			for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
 				if (state->mark[i] == -1)
 					actionSet.push_back(i);
 
@@ -81,7 +81,7 @@ namespace GoAI {
 
 	static int move_pos = -1;
 	static int evaluate_fg = 0;
-	static vector<double> evaluate_result{ BOARDSIZE * BOARDSIZE };
+	static vector<double> evaluate_result{ BOARD_SIZE * BOARD_SIZE };
 
 	/*
 	 *  Monte-Carlo Tree Search
@@ -235,7 +235,7 @@ namespace GoAI {
 
 		// count how many actions we can choose
 		int num = 0;
-		for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++)
+		for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++)
 			if (s.mark[i] == -1)
 				num++; 
 
@@ -243,7 +243,7 @@ namespace GoAI {
 		while (num > 0) {
 			short index = rand() % num + 1;
 			
-			for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+			for (int i = 0; i < BOARD_SIZE * BOARD_SIZE; i++) {
 				if (s.mark[i] == -1)
 					index--;
 

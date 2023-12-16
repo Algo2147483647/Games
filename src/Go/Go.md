@@ -47,75 +47,78 @@
 
 ### Concept
 
-- Board & Color  
-  Board is ```a 19x19 square grid of points,```  
-  Player: ```by two players called Black and White.```  
-  Color: ```Each point on the grid may be colored black, white or empty.```
+#### Board & Color  
+Board is ```a 19x19 square grid of points,```  
+Player: ```by two players called Black and White.```  
+Color: ```Each point on the grid may be colored black, white or empty.```
 
-  $$\boldsymbol B \in \{0, 1, -1\}^{n \times n}, n = 19  \tag{Board}$$
-  $$c \in \{1, -1\} \tag{Color}$$
+$$\boldsymbol B \in \{0, 1, -1\}^{n \times n}, n = 19  \tag{Board}$$
+$$c \in \{1, -1\} \tag{Color}$$
 
-  |Name|Number|
-  |---|---|
-  |Empty| 0 |
-  |Black| 1 |
-  |White| -1 |
-  |||
-  
-- Reach  
-  ```A point P, not colored C, is said to reach C, if there is a path of (vertically or horizontally) adjacent points of P’s color from P to a point of color C.```
+|Name|Number|
+|---|---|
+|Empty| 0 |
+|Black| 1 |
+|White| -1 |
+|||
 
-  $$\text{adj}(x, y) = \{(x+1, y), (x, y+1), (x-1, y), (x, y-1)\}  \tag{Adjacent}$$
+#### Reach  
+```A point P, not colored C, is said to reach C, if there is a path of (vertically or horizontally) adjacent points of P’s color from P to a point of color C.```
 
-  - Stone Block
-    Stone Block is consisted of adjecent stones of the same color.
+$$\text{adj}(x, y) = \{(x+1, y), (x, y+1), (x-1, y), (x, y-1)\}  \tag{Adjacent}$$
 
-  - Qi
-    Qi is a number of empty points that a stone block can reach.
+- Stone Block
+  Stone Block is consisted of adjecent stones of the same color.
 
-- $\mathcal S$ State 
-  $$S = (\boldsymbol B) \tag{State Set}$$
+- Qi
+  Qi is a number of empty points that a stone block can reach.
 
-  - $S_0$ Initial State  
-    ```Starting with an empty grid.```
+#### $\mathcal S$ State 
+$$S = (\boldsymbol B) \tag{State Set}$$
 
-    $$\begin{align*}
-      \boldsymbol B_0 &= \boldsymbol 0  \tag{空枰开局}
-    \end{align*}$$
+- $S_0$ Initial State  
+  ```Starting with an empty grid.```
 
-  - $S_{\text{end}}$  Termination Status  
-    ```The game ends after two consecutive passes.```
-    $$a_{\text{end-1}} = a_{\text{end}} = \text{PASS}$$
+  $$\begin{align*}
+    \boldsymbol B_0 &= \boldsymbol 0  \tag{空枰开局}
+  \end{align*}$$
 
-- $\mathcal A$ Action   
-  - ```A turn is either a pass; or a move```
-    $$\mathcal A = \{(\text{PASS}, c)\} \cup \{(x, y, c) \ |\ x \in 1:n,\ y \in 1:n,\ c \in \{1, -1\},\ B(x, y) = 0\}  \tag{Action Set}$$
+- $S_{\text{end}}$  Termination Status  
+  ```The game ends after two consecutive passes.```
+  $$a_{\text{end-1}} = a_{\text{end}} = \text{PASS}$$
 
-  - $A_0$ Initial Action  
-    ```starting with Black.```
-    $$A_{0,c} = 1  \tag{黑先白后}$$
+#### $\mathcal A$ Action   
 
-  - ```the players alternate turns.```
-    $$A_{k,c} = -A_{k-1,c}  \tag{交替落子}$$
+- ```A turn is either a pass; or a move```
+  $$\mathcal A = \{(\text{PASS}, c)\} \cup \{(x, y, c) \ |\ x \in 1:n,\ y \in 1:n,\ c \in \{1, -1\},\ B(x, y) = 0\}  \tag{Action Set}$$
 
-  - ```禁止全局同形```, ```that doesn’t repeat an earlier grid coloring.```
-    $$\boldsymbol B_k \neq \boldsymbol B_{k-i}  \quad,  \forall 0 < i \le k  \tag{禁全同}$$
+- $A_0$ Initial Action  
+  ```starting with Black.```
+  $$A_{0,c} = 1  \tag{黑先白后}$$
 
-- $S_{k-1} \overset{A_{k-1}}{\rightarrow} S_{k}$ Status update   
-  - ```A move consists of coloring an empty point one’s own color;```
-    $$\boldsymbol B(a_{k,x}, a_{k,y}) \gets a_{k,c}  \tag{空地落子}$$ 
+- ```the players alternate turns.```
+  $$A_{k,c} = -A_{k-1,c}  \tag{交替落子}$$
 
-  - ```then clearing the opponent color, and then clearing one’s own color.```, ```Clearing a color is the process of emptying all points of that color that don’t reach empty.```
-    $$\boldsymbol B((u_x, u_y) \ |\ Q(U) = 0, U_c \neq a_{k,c}) \gets 0  \tag{无气提子}$$
+- ```禁止全局同形```, ```that doesn’t repeat an earlier grid coloring.```
+  $$\boldsymbol B_k \neq \boldsymbol B_{k-i}  \quad,  \forall 0 < i \le k  \tag{禁全同}$$
 
-- $R(S_{\text{end}})$ Reward, Victory or Defeat  
-  - ```A player’s score is the number of points of her color, plus the number of empty points that reach only her color.```
-  - In order balance the first-hand advantage, the black gives white 7.5 points. 
-  - ```The player with the larger score at the end of the game is the winner.```
+#### $S_{k-1} \overset{A_{k-1}}{\rightarrow} S_{k}$ Status update   
 
-    $$R_{\text{Black}}(S) = -R_{\text{White}}(S)  \tag{Zero-Sum Game}$$
+- ```A move consists of coloring an empty point one’s own color;```
+  $$\boldsymbol B(a_{k,x}, a_{k,y}) \gets a_{k,c}  \tag{空地落子}$$ 
 
-    $$R_{\text{Black}}(S) = - \frac{7.5}{2} + \sum_{\begin{matrix}\tiny{(x, y) \in (1:n, 1:n)} \\ \tiny{\boldsymbol B(x, y) = 0}\end{matrix}}(x, y, S)  \tag{数子}$$ 
+- ```then clearing the opponent color, and then clearing one’s own color.```, ```Clearing a color is the process of emptying all points of that color that don’t reach empty.```
+  $$\boldsymbol B((u_x, u_y) \ |\ Q(U) = 0, U_c \neq a_{k,c}) \gets 0  \tag{无气提子}$$
 
-    $$I_{\text{Black}}(x, y, S) = \left\{\begin{matrix} c & c \in \text{reach}(x, y), -c \notin \text{reach}(x, y) \\ \frac{1}{2} & other.\end{matrix}\right.$$
+#### $R(S_{\text{end}})$ Reward, Victory or Defeat  
+
+- ```A player’s score is the number of points of her color, plus the number of empty points that reach only her color.```
+- In order balance the first-hand advantage, the black gives white 7.5 points. 
+- ```The player with the larger score at the end of the game is the winner.```
+
+  $$R_{\text{Black}}(S) = -R_{\text{White}}(S)  \tag{Zero-Sum Game}$$
+
+  $$R_{\text{Black}}(S) = - \frac{7.5}{2} + \sum_{\begin{matrix}\tiny{(x, y) \in (1:n, 1:n)} \\ \tiny{\boldsymbol B(x, y) = 0}\end{matrix}}(x, y, S)  \tag{数子}$$ 
+
+  $$I_{\text{Black}}(x, y, S) = \left\{\begin{matrix} c & c \in \text{reach}(x, y), -c \notin \text{reach}(x, y) \\ \frac{1}{2} & other.\end{matrix}\right.$$
 

@@ -1,4 +1,4 @@
-# Gobang
+# Gomoku
 
 [TOC]
 
@@ -30,5 +30,23 @@ $$
 \end{align*}
 $$
 
+### 禁手
+
+#### 三三
+
+#### 四四
+
+#### 长连
+
+### Soosorv-8
+
+1. The first player puts one of the 26 openings.
+2. The other player has the right to swap.
+3. The white player puts the 4th move anywhere on board and declares whether there will be 1, 2, 3 or 4 fifth moves offered in the game.
+4. The other player has a right to swap.
+5. The black player puts as many 5th moves on the board as it was declared before. The fifth moves can not be symmetrical.
+6. The white player chooses one 5th from these offerings and plays the 6th move
+
 ### 输赢判定  
+
 落子后，当一方存在连子数$\ge 5$时，获胜。
