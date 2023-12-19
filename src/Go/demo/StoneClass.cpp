@@ -15,8 +15,8 @@ StoneClass::StoneClass(QWidget* parent) : QWidget(parent) {
 
     setFocusPolicy(Qt::StrongFocus);
 
-    //GoAI::evaluate_result.resize(BOARDNUM, 0);
-    //GoAI::evaluate_visit. resize(BOARDNUM, 0);
+    //GoAI::evaluate_result.resize(BOARD_STONE_NUM, 0);
+    //GoAI::evaluate_visit. resize(BOARD_STONE_NUM, 0);
 }
 
 /*
@@ -111,11 +111,11 @@ void StoneClass::openAI() {
  */
 void StoneClass::aiEvaluate() {
     static int fg = 0;
-    static QLabel** labels = new QLabel * [BOARDNUM];
+    static QLabel** labels = new QLabel * [BOARD_STONE_NUM];
     static QFont font("Times New Roman", 12, 50);
 
     if (fg == 0) {
-        for (int i = 0; i < BOARDNUM; i++) {
+        for (int i = 0; i < BOARD_STONE_NUM; i++) {
             labels[i] = new QLabel(w);
             labels[i]->setFont(font);
             labels[i]->setAlignment(Qt::AlignCenter);
@@ -130,14 +130,14 @@ void StoneClass::aiEvaluate() {
         //GoAI::evaluate_fg = 1;
         QThread::msleep(50);
 
-        //for (int i = 0; i < BOARDNUM; i++)
+        //for (int i = 0; i < BOARD_STONE_NUM; i++)
             //if (state->mark[i] == -1 && maxn < GoAI::evaluate_result[i]) {
                 //maxn = GoAI::evaluate_result[i];
                 //maxi = i;
             //} 
     } 
 
-    for (int i = 0; i < BOARDNUM; i++) {
+    for (int i = 0; i < BOARD_STONE_NUM; i++) {
         if ((state->mark[i] == -1) && fg == 1) {
             int x = i % BOARD_SIZE,
                 y = i / BOARD_SIZE;
@@ -165,11 +165,11 @@ void StoneClass::aiEvaluate() {
  */
 void StoneClass::aiEvaluate_visit() {
     static int fg = 0;
-    static QLabel** labels = new QLabel * [BOARDNUM];
+    static QLabel** labels = new QLabel * [BOARD_STONE_NUM];
     static QFont font("Times New Roman", 8, 50);
 
     if (fg == 0) {
-        for (int i = 0; i < BOARDNUM; i++) {
+        for (int i = 0; i < BOARD_STONE_NUM; i++) {
             labels[i] = new QLabel(w);
             labels[i]->setFont(font);
             labels[i]->setAlignment(Qt::AlignCenter);
@@ -183,7 +183,7 @@ void StoneClass::aiEvaluate_visit() {
         QThread::msleep(50);
     }
 
-    for (int i = 0; i < BOARDNUM; i++) {
+    for (int i = 0; i < BOARD_STONE_NUM; i++) {
         if ((state->mark[i] == -1) && fg == 1) {
             int x = i % BOARD_SIZE,
                 y = i / BOARD_SIZE;
@@ -231,10 +231,10 @@ void StoneClass::displayWin() {
 /*
  *  显示棋子
  */
-void StoneClass::displayStone(array<Go::Color, BOARDNUM>& board) {
+void StoneClass::displayStone(array<Go::Color, BOARD_STONE_NUM>& board) {
     int StoneCur = 0;
 
-    for (int i = 0; i < BOARDNUM; i++) {
+    for (int i = 0; i < BOARD_STONE_NUM; i++) {
         if (board[i] != 0) {
             int x = i % BOARD_SIZE,
                 y = i / BOARD_SIZE;
@@ -257,7 +257,7 @@ void StoneClass::displayStone(array<Go::Color, BOARDNUM>& board) {
             StoneCur++;
         }
     }
-    for (int i = StoneCur; i < BOARDNUM; i++)
+    for (int i = StoneCur; i < BOARD_STONE_NUM; i++)
         Stone[i]->hide();
 }
 
@@ -266,11 +266,11 @@ void StoneClass::displayStone(array<Go::Color, BOARDNUM>& board) {
  */
 void StoneClass::displayQi(Go::State& s) {
     static int fg = 0;
-    static QLabel** labels = new QLabel * [BOARDNUM];
+    static QLabel** labels = new QLabel * [BOARD_STONE_NUM];
     static QFont font("Times New Roman", 15, 50);
 
     if (fg == 0) {
-        for (int i = 0; i < BOARDNUM; i++) {
+        for (int i = 0; i < BOARD_STONE_NUM; i++) {
             labels[i] = new QLabel(w);
             labels[i]->setFont(font);
             labels[i]->setStyleSheet("color:White");
@@ -279,7 +279,7 @@ void StoneClass::displayQi(Go::State& s) {
         fg = 1;
     }
 
-    for (int i = 0; i < BOARDNUM; i++) {
+    for (int i = 0; i < BOARD_STONE_NUM; i++) {
         if (s.board[i] != 0 && fg == 1) {
             int x = i % BOARD_SIZE,
                 y = i / BOARD_SIZE;
@@ -302,11 +302,11 @@ void StoneClass::displayQi(Go::State& s) {
  */
 void StoneClass::displayMark(Go::State& s) {
     static int fg = 0;
-    static QLabel** labels = new QLabel * [BOARDNUM];
+    static QLabel** labels = new QLabel * [BOARD_STONE_NUM];
     static QFont font("Times New Roman", 15, 50);
 
     if (fg == 0) {
-        for (int i = 0; i < BOARDNUM; i++) {
+        for (int i = 0; i < BOARD_STONE_NUM; i++) {
             labels[i] = new QLabel(w);
             labels[i]->setFont(font);  
             labels[i]->setAlignment(Qt::AlignCenter);
@@ -314,7 +314,7 @@ void StoneClass::displayMark(Go::State& s) {
         fg = 1;
     }
 
-    for (int i = 0; i < BOARDNUM; i++) {
+    for (int i = 0; i < BOARD_STONE_NUM; i++) {
         if (s.mark[i] >= 0 && fg == 1) {
             int x = i % BOARD_SIZE,
                 y = i / BOARD_SIZE;
@@ -336,12 +336,12 @@ void StoneClass::displayMark(Go::State& s) {
  *  显示手数
  */
 void StoneClass::displayNumber(Go::State& s) {
-    static int fg = 0, number[BOARDNUM];
-    static QLabel** labels = new QLabel * [BOARDNUM];
+    static int fg = 0, number[BOARD_STONE_NUM];
+    static QLabel** labels = new QLabel * [BOARD_STONE_NUM];
     static QFont font("Times New Roman", 15, 50);
 
     if (fg == 0) {
-        for (int i = 0; i < BOARDNUM; i++) {
+        for (int i = 0; i < BOARD_STONE_NUM; i++) {
             labels[i] = new QLabel(w);
             labels[i]->setFont(font);
             labels[i]->setStyleSheet("color:White");
@@ -350,7 +350,7 @@ void StoneClass::displayNumber(Go::State& s) {
         fg = 1;
     }
 
-    memset(number, 0, sizeof(int) * BOARDNUM);
+    memset(number, 0, sizeof(int) * BOARD_STONE_NUM);
     Go::State* s_ = &s;
     int num = 0, sum = 0;
 
@@ -364,7 +364,7 @@ void StoneClass::displayNumber(Go::State& s) {
         s_ = s_->parent;
     }
 
-    for (int i = 0; i < BOARDNUM; i++) {
+    for (int i = 0; i < BOARD_STONE_NUM; i++) {
         if (number[i] != 0)
             number[i] += sum;  
 

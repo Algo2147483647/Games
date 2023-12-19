@@ -10,12 +10,12 @@ namespace Go {
 	/*
 	 *	calculate reach color to help compute reward
 	 */
-	inline int calculateReachColor(array<Color, BOARDNUM>& board, const int color) {
+	inline int calculateReachColor(array<Color, BOARD_STONE_NUM>& board, const int color) {
 		auto reachable = 0;
-		auto bd = vector<bool>(BOARDNUM, false);
+		auto bd = vector<bool>(BOARD_STONE_NUM, false);
 		auto open = queue<int>();
 
-		for (auto i = 0; i < BOARDNUM; i++) {
+		for (auto i = 0; i < BOARD_STONE_NUM; i++) {
 			if (board[i] == color) {
 				reachable++;
 				bd[i] = true;

@@ -1,6 +1,10 @@
-# Go  
+# Go & AI
 
 [TOC]
+
+## Define
+
+[Go](./Go.md)
 
 ## Core
 
@@ -16,6 +20,20 @@
 
 ### State
 
+```cpp
+class State {
+    public:
+    short action = -2;
+    Color player = BLACK;
+
+    array<Color, BOARD_STONE_NUM> board;
+    array<short, BOARD_STONE_NUM> mark, next;
+    array<unsigned char, BOARD_STONE_NUM> qi;
+
+    vector<uint64_t> historyState;
+};
+```
+
 - action
 - player
 - board
@@ -23,9 +41,15 @@
 - next
 - qi
 
-#### Zobrist Hashing
+#### Termination
+
+- 2 $\times$ PASS
+
+#### Zobrist Hash
 
 ### Action
+
+#### Pass
 
 #### Disable global isomorphism
 
@@ -35,15 +59,19 @@
 
 ### $S_t \overset{A_t}{\rightarrow} S_{t+1}$
 
+<img src="assets/Update_State.svg" alt="assets/Update_State.svg" style="zoom:50%;" />
+
 #### Remove stone block with no Qi
 
 #### Merge stone block
 
 ### Reward
 
+<img src="assets/Terminate.svg" alt="Terminate" style="zoom:50%;" />
+
 #### Score: Number of spaces reachable
 
-1. 函数`calculateReachColor`接收两个参数：一个颜色数组`board`和一个表示特定颜色的整数`color`。`BOARDNUM`是一个预定义的常量，表示`board`数组的大小。
+1. 函数`calculateReachColor`接收两个参数：一个颜色数组`board`和一个表示特定颜色的整数`color`。`BOARD_STONE_NUM`是一个预定义的常量，表示`board`数组的大小。
 2. `reachable`变量初始化为0，它用于记录可达的空格数量。
 3. `bd`是一个布尔类型的向量，初始化所有元素为`false`，用于标记网格中的每个位置是否已经被访问过。
 4. `open`是一个队列，用于进行宽度优先搜索（BFS）。

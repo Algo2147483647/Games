@@ -4,6 +4,7 @@
 #include "state.h"
 #include "updateState.h"
 #include "reward.h"
+#include "zobristHash.h"
 
 using namespace std;
 
@@ -11,11 +12,15 @@ namespace Go {
 	/*
 	 *  generate next state
 	 */
+	//void init() {
+	//	zobrist_init();
+	//}
+
 	inline State* nextState(State& s, int action) {
 		State* s_ = new State();
 		*s_ = s;
 		s_->parent = &s;
-		s_->player = -s.player;
+		s_->player = (BLACK ? WHITE : BLACK);
 		s_->action = action;
 
 		if(updateState(*s_))

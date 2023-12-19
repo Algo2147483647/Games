@@ -40,7 +40,7 @@ private:
     void aiEvaluate();
     void aiEvaluate_visit();
 
-    void displayStone(array<Go::Color, BOARDNUM>& Board);
+    void displayStone(array<Go::Color, BOARD_STONE_NUM>& Board);
     void displayWin();
     void displayQi(Go::State& s);
     void displayMark(Go::State& s);

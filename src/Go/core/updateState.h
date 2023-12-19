@@ -16,7 +16,7 @@ namespace Go {
 		int buf[4], bufcur = 0;
 
 		do {
-			s.board[i] = 0;
+			s.board[i] = EMPTY;
 			s.mark [i] = -1;
 
 			bufcur = 0;

@@ -11,17 +11,9 @@ namespace Go {
 	 *  Disable global isomorphism
 	 */
 	inline bool judgeJie(State& state) {
-		State* s = &state;
-
-		for (int i = 0; i <= 2; i++) {
-			if (s->parent != NULL && s->parent->parent != NULL) {
-				s = s->parent->parent;
-
-				if (state.board == s->board)
-					return true;
-			}
-			else break;
-		}
+		for (int i = state.historyState.size() - 3; i >= 0; i -= 2)
+			if (state.historyState.back() == state.historyState[i]) 
+				return true;
 		return false;
 	}
 

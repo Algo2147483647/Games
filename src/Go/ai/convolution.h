@@ -18,7 +18,7 @@ namespace GoAI {
  */
 void img2col(int kernelSize, int channels, vector<float>& in, vector<float>& out) {
     if (kernelSize == 1) {
-        copy(begin(in), begin(in) + channels * BOARDNUM * sizeof(float), begin(out));
+        copy(begin(in), begin(in) + channels * BOARD_STONE_NUM * sizeof(float), begin(out));
         return;
     }
     
@@ -32,7 +32,7 @@ void img2col(int kernelSize, int channels, vector<float>& in, vector<float>& out
     float* data_im  = in.data(),
          * data_col = out.data();
 
-    for (int c = channels; c--; data_im += BOARDNUM) {
+    for (int c = channels; c--; data_im += BOARD_STONE_NUM) {
         for (int k_r = 0; k_r < kernelSize; k_r++) {
             for (int k_c = 0; k_c < kernelSize; k_c++) {
 
@@ -77,15 +77,15 @@ void convolve_img2col(int w, int h, int inC, int outC,
     vector<float> col(kernelSize * kernelSize * inC * w * h);
     img2col(kernelSize, c, in, col);
 
-    auto C_mat = Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>>(out.data(), BOARDNUM, outputs);
+    auto C_mat = Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>>(out.data(), BOARD_STONE_NUM, outputs);
     C_mat.noalias() =
-        Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>>(col.data(), BOARDNUM, kernelSize * kernelSize * inC) *
+        Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>>(col.data(), BOARD_STONE_NUM, kernelSize * kernelSize * inC) *
         Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic>>(weights.data(), kernelSize * kernelSize * inC, outputs);
 
     // biases
     for (int o = 0; o < outputs; o++)
-        for (int b = 0; b < BOARDNUM; b++)
-            out[(o * BOARDNUM) + b] += biases[o];
+        for (int b = 0; b < BOARD_STONE_NUM; b++)
+            out[(o * BOARD_STONE_NUM) + b] += biases[o];
 }
 
 

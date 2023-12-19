@@ -51,7 +51,7 @@ namespace GoAI {
 		// generate action set randomly
 		void generateActionSet() {
 			actionSet.push_back(PASS);
-			for (int i = 0; i < BOARDNUM; i++)
+			for (int i = 0; i < BOARD_STONE_NUM; i++)
 				if (state->mark[i] == -1)
 					actionSet.push_back(i);
 		}
@@ -60,8 +60,8 @@ namespace GoAI {
 	inline mutex mutex_;
 	static int move_pos = -1;
 	static int evaluate_fg = 0;
-	static vector<double> evaluate_result{ BOARDNUM };
-	static vector<int> evaluate_visit{ BOARDNUM };
+	static vector<double> evaluate_result{ BOARD_STONE_NUM };
+	static vector<int> evaluate_visit{ BOARD_STONE_NUM };
 
 	Node* Select(Node* node, bool isExplore);
 	void ExpandSimulate(Node* nd, int id);
@@ -136,7 +136,7 @@ namespace GoAI {
 	 */
 	inline void judgeBanAndEye(Go::State& s, Go::Color player) {
 
-		for (int i = 0; i < BOARDNUM; i++) {
+		for (int i = 0; i < BOARD_STONE_NUM; i++) {
 			if (s.board[i] != 0) continue;
 
 			char isEye = 0x7F;
@@ -251,7 +251,7 @@ namespace GoAI {
 			int num = 0, 
 				randnum = rand();
 
-			for (int i = 0; i < BOARDNUM; i++)
+			for (int i = 0; i < BOARD_STONE_NUM; i++)
 				if (s.mark[i] == -1)
 					num++; 
 
@@ -259,7 +259,7 @@ namespace GoAI {
 			while (num > 0) {
 				int index = randnum % num + 1;
 
-				for (int i = 0; i < BOARDNUM; i++) {
+				for (int i = 0; i < BOARD_STONE_NUM; i++) {
 					if (s.mark[i] == -1)
 						index--;
 

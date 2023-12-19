@@ -57,7 +57,7 @@ void forward(vector<float>& in,
     auto in_channels =
         max(static_cast<size_t>(output_channels),
             static_cast<size_t>(Network::INPUT_CHANNELS));
-    auto conv_out = vector<float>(output_channels * BOARDNUM);
+    auto conv_out = vector<float>(output_channels * BOARD_STONE_NUM);
     auto V = vector<float>(WINOGRAD_TILE * in_channels * P);
     auto M = vector<float>(WINOGRAD_TILE * output_channels * P);
 
@@ -65,19 +65,19 @@ void forward(vector<float>& in,
         output_channels, in, 
         weights.weights_conv[0], V, M, conv_out);
 
-    batchnorm<BOARDNUM>(output_channels, conv_out,
+    batchnorm<BOARD_STONE_NUM>(output_channels, conv_out,
         weights.means_batchnorm[0].data(),
         weights.stddevs_batchnorm[0].data());
 
     // Residual tower
-    auto conv_in = vector<float>(output_channels * BOARDNUM);
-    auto res = vector<float>(output_channels * BOARDNUM);
+    auto conv_in = vector<float>(output_channels * BOARD_STONE_NUM);
+    auto res = vector<float>(output_channels * BOARD_STONE_NUM);
 
     for (auto i = size_t{ 1 }; i < weights.weights_conv.size(); i += 2) {
         auto output_channels = in_channels;
         swap(conv_out, conv_in);
         convolve_3_winograd(output_channels, conv_in, weights.weights_conv[i], V, M, conv_out);
-        batchnorm<BOARDNUM>(output_channels, conv_out,
+        batchnorm<BOARD_STONE_NUM>(output_channels, conv_out,
                             weights.means_batchnorm[i].data(),
                             weights.stddevs_batchnorm[i].data());
 
@@ -85,7 +85,7 @@ void forward(vector<float>& in,
         swap(conv_out, conv_in);
         convolve_3_winograd(output_channels, conv_in,
                            weights.weights_conv[i + 1], V, M, conv_out);
-        batchnorm<BOARDNUM>(output_channels, conv_out,
+        batchnorm<BOARD_STONE_NUM>(output_channels, conv_out,
                             weights.means_batchnorm[i + 1].data(),
                             weights.stddevs_batchnorm[i + 1].data(), res.data());
     }
