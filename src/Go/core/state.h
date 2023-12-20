@@ -26,9 +26,6 @@ namespace Go {
 			fill(qi.begin(),     qi.end(),    0);
 
 			historyState.push_back(0);
-			for (int i = 0; i < BOARD_COLOR_NUM; i++) {
-				zobrist_hash(historyState.back(), i, EMPTY);
-			}
 		}
 	};
 

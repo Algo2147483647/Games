@@ -15,9 +15,9 @@ namespace Go {
 		int buf[4], bufcur = 0;
 
 		do {
+			zobrist_hash(s.historyState.back(), p_, s.board[p_]);
 			s.board[p_] = EMPTY;
 			s.mark [p_] = -1;
-			zobrist_hash(s.historyState.back(), p_, EMPTY);
 
 			bufcur = 0;
 
