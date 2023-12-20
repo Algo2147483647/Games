@@ -13,10 +13,13 @@ using namespace std;
 namespace Go {
 #define PASS  -1
 #define BOARD_SIZE 19 // For a standard board
-#define BOARD_STONE_NUM BOARD_SIZE * BOARD_SIZE
+#define BOARD_COLOR_NUM BOARD_SIZE * BOARD_SIZE
 
-	const static int
-		adj_x[] = { 0, 0, 1,-1 },
-		adj_y[] = { 1,-1, 0, 0 };
+	/*
+	 * possible contents of a vertex
+	 */
+	enum Color : char {
+		EMPTY = 0, BLACK = 1, WHITE = -1
+	};
 }
 #endif

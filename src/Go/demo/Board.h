@@ -7,12 +7,10 @@
 #include <QLabel>
 #include "./core/Go.h"
 
-class BoardClass : public QWidget
+class Board : public QWidget
 {
 public:
-    static const short
-        gridSize = 40,
-        boardMargin = 30;
+    static const short gridSize = 40, boardMargin = 30;
     short lineNum;
     int windowSize;
     
@@ -20,7 +18,7 @@ public:
         ** xIndexLabel, 
         ** yIndexLabel;
 
-    BoardClass(QWidget* parent, int _lineNum) : QWidget(parent) {
+    Board(QWidget* parent, int _lineNum) : QWidget(parent) {
         lineNum = _lineNum;
         windowSize = (lineNum - 1) * gridSize + boardMargin * 2;
         xIndexLabel = new QLabel * [lineNum];
@@ -30,7 +28,6 @@ public:
     }
 
     void setIndexLabel(QWidget* widget) {
-        //字体，大小，粗细（50正常），是否斜体
         QFont font("Times New Roman", 15, 50, true);
 
         for (int i = 0; i < lineNum; i++) {
@@ -55,7 +52,7 @@ protected:
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing, true);
 
-        for (int i = 0; i < lineNum; i++) {                           //画网格线
+        for (int i = 0; i < lineNum; i++) {
             painter.drawLine(
                 boardMargin + gridSize * i,
                 boardMargin,
@@ -69,8 +66,8 @@ protected:
                 boardMargin + gridSize * i
             );
         }
-        painter.setPen(QPen(4));            //设置画笔形式
-        painter.setBrush(QColor(0, 0, 0));  //设置画刷，如果不画实现的直接把Brush设置为setBrush(Qt::NoBrush);
+        painter.setPen(QPen(4)); 
+        painter.setBrush(QColor(0, 0, 0));
 
         int starSize = gridSize / 4,
             star[][2] = {
@@ -87,7 +84,6 @@ protected:
             );
         }
     }
-
 };
 
 

@@ -10,12 +10,12 @@ namespace Go {
 	/*
 	 *	calculate reach color to help compute reward
 	 */
-	inline int calculateReachColor(array<Color, BOARD_STONE_NUM>& board, const int color) {
+	inline int calculateReachColor(array<Color, BOARD_COLOR_NUM>& board, const int color) {
 		auto reachable = 0;
-		auto bd = vector<bool>(BOARD_STONE_NUM, false);
+		auto bd = vector<bool>(BOARD_COLOR_NUM, false);
 		auto open = queue<int>();
 
-		for (auto i = 0; i < BOARD_STONE_NUM; i++) {
+		for (auto i = 0; i < BOARD_COLOR_NUM; i++) {
 			if (board[i] == color) {
 				reachable++;
 				bd[i] = true;
@@ -28,13 +28,9 @@ namespace Go {
 			open.pop();
 
 			for (auto j = 0; j < 4; j++) {
-				int xt = v % BOARD_SIZE + adj_x[j],
-					yt = v / BOARD_SIZE + adj_y[j],
-					vt = yt * BOARD_SIZE + xt;
+				int vt = neighborhood(v, j);
 
-				if (xt >= 0 && xt < BOARD_SIZE &&
-					yt >= 0 && yt < BOARD_SIZE &&
-					!bd[vt] && board[vt] == EMPTY) {
+				if (vt != -1 && !bd[vt] && board[vt] == EMPTY) {
 					reachable++;
 					bd[vt] = true;
 					open.push(vt);
@@ -47,7 +43,7 @@ namespace Go {
 	/*
 	 *  compute reward of termination state and judge victory
 	 */
-	inline char computeReward(State& s) {
+	inline Color computeReward(State& s) {
 		float komi = 7.5;
 
 		auto white = calculateReachColor(s.board, WHITE);

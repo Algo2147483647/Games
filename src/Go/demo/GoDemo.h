@@ -5,26 +5,47 @@
 #include <QPainter>
 #include <QWidget>
 #include <QLabel>
-#include "BoardClass.h"
-#include "StoneClass.h"
+#include "Board.h"
+#include "Stone.h"
 
 class GoDemo : public QMainWindow
 {
 public:
-    short windowSize;
+    short windowSize; 
+    Board* board;
+    Stone* stone;
+    QWidget* m_boardWidget;
+    QWidget* m_stoneWidget;
 
-    GoDemo(QWidget* parent = 0);
+    GoDemo(QWidget* parent = 0) : QMainWindow(parent) {
+        windowSize = Board::gridSize * (BOARD_SIZE + 0.5);
+        setMaximumSize(windowSize, windowSize);
+        setMinimumSize(windowSize, windowSize);
+        setWindowTitle("Go");
+        setWindowOpacity(0.8);
+
+        // Board 
+        m_boardWidget = new QWidget(this);
+        initializeWidget(m_boardWidget, Qt::white);
+        board = new Board(m_boardWidget, BOARD_SIZE);
+        board->setGeometry(0, 0, windowSize, windowSize);
+
+        // Stone 
+        m_stoneWidget = new QWidget(this);
+        initializeWidget(m_stoneWidget, Qt::transparent);
+        stone = new Stone(m_stoneWidget);
+        stone->setGeometry(0, 0, windowSize, windowSize);
+    }
     ~GoDemo() { ; };
 
-    // 图层  
-    BoardClass* boardClass;
-    StoneClass* stoneClass;
-    QWidget* BoardWidget = new QWidget(this);     //网格
-    QWidget* StoneWidget = new QWidget(this);     //棋子
-
-    // 函数 
-    void setGridWidget (QWidget* widget);        //绘制网格界面
-    void setStoneWidget(QWidget* widget);       //绘制棋子界面
+    void initializeWidget(QWidget* widget, const QColor& backgroundColor) {
+        widget->setGeometry(0, 0, windowSize, windowSize);
+        QPalette pal(widget->palette());
+        pal.setColor(QPalette::Window, backgroundColor);
+        widget->setAutoFillBackground(true);
+        widget->setPalette(pal);
+        widget->show();
+    }
 };
 
 #endif

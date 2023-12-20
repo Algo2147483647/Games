@@ -12,24 +12,18 @@ namespace Go {
 	/*
 	 *  generate next state
 	 */
-	//void init() {
-	//	zobrist_init();
-	//}
+	inline void go_init() {
+		zobrist_init();
+	}
 
-	inline State* nextState(State& s, int action) {
-		State* s_ = new State();
-		*s_ = s;
-		s_->parent = &s;
-		s_->player = (BLACK ? WHITE : BLACK);
-		s_->action = action;
+	inline State& play(State& s, int action) {
+		State s_ = s;
+		s.player = (s.player == BLACK ? WHITE : BLACK);
+		s.action = action;
 
-		if(updateState(*s_))
-			return s_;
-		else {
-			s_->parent = NULL;
-			delete s_;
-			return NULL;
-		}
+		if(updateState(s))
+			return s;
+		return s = s_;
 	}
 }
 

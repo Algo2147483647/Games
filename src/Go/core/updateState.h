@@ -10,25 +10,22 @@ namespace Go {
 	/*
 	 *  remove stone block
 	 */
-	inline void removeBlock(State& s, int id) {
-		int i = id;
-
+	inline void removeBlock(State& s, int p) {
+		int p_ = p;
 		int buf[4], bufcur = 0;
 
 		do {
-			s.board[i] = EMPTY;
-			s.mark [i] = -1;
+			s.board[p_] = EMPTY;
+			s.mark [p_] = -1;
+			zobrist_hash(s.historyState.back(), p_, EMPTY);
 
 			bufcur = 0;
 
 			for (int j = 0; j < 4; j++) {
-				int xt = i % BOARD_SIZE + adj_x[j],
-					yt = i / BOARD_SIZE + adj_y[j],
-					vt = yt * BOARD_SIZE + xt;
+				int v = neighborhood(p_, j);
 
-				if (xt >= 0 && xt < BOARD_SIZE &&
-					yt >= 0 && yt < BOARD_SIZE && s.board[vt] != EMPTY)
-					buf[bufcur++] = s.mark[vt];
+				if (v != -1 && s.board[v] != EMPTY)
+					buf[bufcur++] = s.mark[v];
 			}
 
 			if (bufcur != 0) {
@@ -41,7 +38,7 @@ namespace Go {
 						s.qi[buf[j]] ++;
 				}
 			}
-		} while ((i = s.next[i]) != id);
+		} while ((p_ = s.next[p_]) != p);
 
 		return;
 	}
@@ -49,42 +46,36 @@ namespace Go {
 	/*
 	 *  merge stone block
 	 */
-	inline void mergeBlock(State& s, int id1, int id2) {
-		if (id1 < id2)
-			swap(id1, id2);
+	inline void mergeBlock(State& s, int p1, int p2) {
+		if (p1 < p2)
+			swap(p1, p2);
 
-		int i = id1;
+		int p = p1;
 
 		do {
 			for (int j = 0; j < 4; j++) {
-				int xt = i % BOARD_SIZE + adj_x[j],
-					yt = i / BOARD_SIZE + adj_y[j],
-					vt = yt * BOARD_SIZE + xt,
-					found = 0;;
+				int v = neighborhood(p, j),
+					found = 0;
 
-				if (xt < 0 || xt >= BOARD_SIZE ||
-					yt < 0 || yt >= BOARD_SIZE || s.board[vt] != EMPTY)
+				if (v == -1 || s.board[v] != EMPTY)
 					continue;
 
 				for (int k = 0; k < 4; k++) {
-					int xt_ = xt + adj_x[k],
-						yt_ = yt + adj_y[k],
-						vt_ = yt_ * BOARD_SIZE + xt_;
+					int v_ = neighborhood(v, k);
 
-					if (xt_ >= 0 && xt_ < BOARD_SIZE &&
-						yt_ >= 0 && yt_ < BOARD_SIZE && s.mark[vt_] == id2) {
+					if (v_!= -1 && s.mark[v_] == p2) {
 						found = 1;
 						break;
 					}			
 				}
 				if (!found)
-					s.qi[id2] ++;
+					s.qi[p2] ++;
 			}
 			// update mark and avoid repeated search 
-			s.mark[i] = id2; 
-		} while ((i = s.next[i]) != id1);
+			s.mark[p] = p2; 
+		} while ((p = s.next[p]) != p1);
 
-		swap(s.next[id1], s.next[id2]);
+		swap(s.next[p1], s.next[p2]);
 
 		return;
 	}
@@ -94,10 +85,12 @@ namespace Go {
 	 */
 	inline bool updateState(State& s) {
 		// Pass
-		if (s.action == PASS)
+		if (s.action == PASS) {
+			s.historyState.push_back(s.historyState.back());
 			return true;
+		}
 
-		// is legal move
+		// not a legal move
 		if (s.board[s.action] != EMPTY || isSuicide(s))
 			return false;
 
@@ -106,14 +99,13 @@ namespace Go {
 		s.mark [s.action] = s.action;
 		s.next [s.action] = s.action;
 		s.qi   [s.action] = 0;
+		s.historyState.push_back(s.historyState.back());
+		zobrist_hash(s.historyState.back(), s.action, s.player);
 
 		for (int j = 0; j < 4; j++) {
-			int xt = s.action % BOARD_SIZE + adj_x[j],
-				yt = s.action / BOARD_SIZE + adj_y[j],
-				vt = yt * BOARD_SIZE + xt;
+			int v = neighborhood(s.action, j);
 
-			if (xt >= 0 && xt < BOARD_SIZE &&
-				yt >= 0 && yt < BOARD_SIZE && s.board[vt] == EMPTY)
+			if (v != -1 && s.board[v] == EMPTY)
 				s.qi[s.action] ++;
 		}
 
@@ -121,15 +113,12 @@ namespace Go {
 		int buf[4], bufcur = 0;
 
 		for (int j = 0; j < 4; j++) {
-			int xt = s.action % BOARD_SIZE + adj_x[j],
-				yt = s.action / BOARD_SIZE + adj_y[j],
-				vt = yt * BOARD_SIZE + xt;
+			int v = neighborhood(s.action, j);
 
-			if (xt < 0 || xt >= BOARD_SIZE ||
-				yt < 0 || yt >= BOARD_SIZE || s.board[vt] == EMPTY)
+			if (v == -1 || s.board[v] == EMPTY)
 				continue;
 
-			buf[bufcur++] = s.mark[vt];
+			buf[bufcur++] = s.mark[v];
 		}
 
 		// clear the opponent colors have no qi and merge stone blocks
@@ -149,7 +138,7 @@ namespace Go {
 		}
 
 		// disable global isomorphism
-		if (judgeJie(s))
+		if (judgeKo(s))
 			return false;
 
 		return true;
