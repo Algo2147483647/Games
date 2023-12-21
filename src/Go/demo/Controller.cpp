@@ -73,8 +73,8 @@ void Controller::displayWin() {
         m_winLabel->setStyleSheet("QLabel { background-color : black; color : white; }");
 
         if (win == Go::BLACK)
-            m_winLabel->setText("BLACK Wins!");
+            m_winLabel->setText("BLACK  Wins!");
         else if (win == Go::WHITE)
-            m_winLabel->setText("WHITE Wins!");
+            m_winLabel->setText("WHITE  Wins!");
     }
 }
