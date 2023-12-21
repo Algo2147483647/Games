@@ -7,6 +7,8 @@
 #include <QLabel>
 #include "Board.h"
 #include "Stone.h"
+#include "Analysis.h"
+#include "Controller.h"
 
 class GoDemo : public QMainWindow
 {
@@ -14,11 +16,15 @@ public:
     short windowSize; 
     Board* board;
     Stone* stone;
+    Analysis* analysis;
+    Controller* controller;
     QWidget* m_boardWidget;
     QWidget* m_stoneWidget;
+    QWidget* m_analysisWidget;
+    QWidget* m_controllerWidget;
 
     GoDemo(QWidget* parent = 0) : QMainWindow(parent) {
-        windowSize = Board::gridSize * (BOARD_SIZE + 0.5);
+        windowSize = Board::gridSize* (BOARD_SIZE + 0.5);
         setMaximumSize(windowSize, windowSize);
         setMinimumSize(windowSize, windowSize);
         setWindowTitle("Go");
@@ -33,8 +39,21 @@ public:
         // Stone 
         m_stoneWidget = new QWidget(this);
         initializeWidget(m_stoneWidget, Qt::transparent);
-        stone = new Stone(m_stoneWidget);
+        stone = new Stone(m_stoneWidget, BOARD_SIZE);
         stone->setGeometry(0, 0, windowSize, windowSize);
+
+        // Analysis 
+        m_analysisWidget = new QWidget(this);
+        initializeWidget(m_analysisWidget, Qt::transparent);
+        analysis = new Analysis(m_analysisWidget);
+        analysis->setGeometry(0, 0, windowSize, windowSize);
+
+        // Controller
+        m_controllerWidget = new QWidget(this);
+        initializeWidget(m_controllerWidget, Qt::transparent);
+        controller = new Controller(m_controllerWidget);
+        controller->stone = stone;
+        controller->analysis = analysis;
     }
     ~GoDemo() { ; };
 

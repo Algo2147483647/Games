@@ -5,45 +5,35 @@
 #include <QPainter>
 #include <QWidget>
 #include <QLabel>
-#include "./core/Go.h"
 
 class Board : public QWidget
 {
 public:
     static const short gridSize = 40, boardMargin = 30;
-    short lineNum;
+    short m_board_size;
     int windowSize;
     
-    QLabel
-        ** xIndexLabel, 
-        ** yIndexLabel;
+    std::vector<QLabel*> m_index_labels_x, m_index_labels_y;
 
-    Board(QWidget* parent, int _lineNum) : QWidget(parent) {
-        lineNum = _lineNum;
-        windowSize = (lineNum - 1) * gridSize + boardMargin * 2;
-        xIndexLabel = new QLabel * [lineNum];
-        yIndexLabel = new QLabel * [lineNum];
+    Board(QWidget* parent, int board_size) : QWidget(parent), m_board_size(board_size) {
+        windowSize = (m_board_size - 1) * gridSize + boardMargin * 2;
 
-        setIndexLabel(this);
-    }
-
-    void setIndexLabel(QWidget* widget) {
         QFont font("Times New Roman", 15, 50, true);
 
-        for (int i = 0; i < lineNum; i++) {
+        for (int i = 0; i < m_board_size; i++) {
             char index = 'A' + (char)i;
 
-            xIndexLabel[i] = new QLabel(widget);
-            yIndexLabel[i] = new QLabel(widget);
+            QLabel* index_label_x = new QLabel(this);
+            QLabel* index_label_y = new QLabel(this);
+            index_label_x->setText(QString(index));
+            index_label_y->setText(QString(index));
+            index_label_x->setGeometry(boardMargin + gridSize * (i - 0.15), 0, 30, 30);
+            index_label_y->setGeometry(10, boardMargin + gridSize * (i - 0.3), 30, 30);
+            index_label_x->setFont(font);
+            index_label_y->setFont(font);
 
-            xIndexLabel[i]->setText(QString(index));
-            yIndexLabel[i]->setText(QString(index));
-
-            xIndexLabel[i]->setGeometry(boardMargin + gridSize * (i - 0.15), 0, 30, 30);
-            yIndexLabel[i]->setGeometry(10, boardMargin + gridSize * (i - 0.3), 30, 30);
-
-            xIndexLabel[i]->setFont(font);
-            yIndexLabel[i]->setFont(font);
+            m_index_labels_x.push_back(index_label_x);
+            m_index_labels_y.push_back(index_label_y);
         }
     }
 
@@ -52,7 +42,7 @@ protected:
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing, true);
 
-        for (int i = 0; i < lineNum; i++) {
+        for (int i = 0; i < m_board_size; i++) {
             painter.drawLine(
                 boardMargin + gridSize * i,
                 boardMargin,
@@ -78,8 +68,8 @@ protected:
 
         for (int i = 0; i < 9; i++) {
             painter.drawEllipse(
-                boardMargin + gridSize * (star[i][0] + BOARD_SIZE / 2) - starSize / 2,
-                boardMargin + gridSize * (star[i][1] + BOARD_SIZE / 2) - starSize / 2,
+                boardMargin + gridSize * (star[i][0] + m_board_size / 2) - starSize / 2,
+                boardMargin + gridSize * (star[i][1] + m_board_size / 2) - starSize / 2,
                 starSize, starSize
             );
         }

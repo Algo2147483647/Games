@@ -10,27 +10,59 @@
 #include <QThread> 
 #include <QMessageBox>
 #include "Board.h"
+#include "./core/Go.h"
 
 class Stone : public QWidget
 {
-    Q_OBJECT
 public:
-    Stone(QWidget* parent);
-
-protected:
-    void keyPressEvent(QKeyEvent* event);
-    void mousePressEvent(QMouseEvent* e);
-
-private:
     const int stoneSize = Board::gridSize * 0.8;
+    int m_board_size;
+    std::vector<QLabel*> m_stones;
+    QLabel* m_stoneMarks = new QLabel(this);
 
-    QLabel* m_stones[BOARD_COLOR_NUM + 5];
-    QLabel* m_stoneWarn = new QLabel(this);
-    QLabel* m_winLable  = new QLabel(this);
+    Stone(QWidget* parent, int board_size) : QWidget(parent), m_board_size(board_size){
+        resize(1000, 1000);
+        setAttribute(Qt::WA_TranslucentBackground, true);
 
-    Go::State* state;
+        m_stoneMarks->setStyleSheet("QLabel{background:#FF0000;}");
+        m_stoneMarks->setGeometry(0, 0, 0, 0);
 
-    void displayWin();
-    void displayStone(array<Go::Color, BOARD_COLOR_NUM>& board);
+        for (int i = 0; i < m_board_size * m_board_size; i++)
+            m_stones.push_back(new QLabel(this));
+    }
+
+    void displayStone(std::array<Go::Color, BOARD_COLOR_NUM>& board) {
+        for (int i = 0; i < m_board_size * m_board_size; i++) {
+            if (board[i] != 0) {
+                int x = i % m_board_size;
+                int y = i / m_board_size;
+                x = Board::boardMargin + x * Board::gridSize - stoneSize / 2;
+                y = Board::boardMargin + y * Board::gridSize - stoneSize / 2;
+
+                m_stones[i]->setGeometry(x, y, stoneSize, stoneSize);
+
+                if (board[i] == Go::BLACK)
+                    m_stones[i]->setStyleSheet("QLabel{background:#000000; border-radius: 16px; border:0px solid black;}");
+                else
+                    m_stones[i]->setStyleSheet("QLabel{background:#FF0000; border-radius: 16px; border:0px solid #FF0000;}");
+
+                m_stones[i]->show();
+            }
+            else {
+                m_stones[i]->hide();
+            }
+        }
+    }
+
+    void displayStoneMark(int p) {
+        int x = p % m_board_size;
+        int y = p / m_board_size;
+
+        m_stoneMarks->setGeometry(
+            Board::boardMargin + x * Board::gridSize - stoneSize / 2,
+            Board::boardMargin + y * Board::gridSize - stoneSize / 2,
+            4, 4
+        );
+    }
 };
 #endif

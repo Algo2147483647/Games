@@ -82,7 +82,7 @@ return hashValue;
 
 #### Disable global isomorphism
 
-函数检查当前传入的状态 state 的 board 成员是否与祖父状态的 board 成员相同。
+检查当前传入的状态 state 的棋盘的zobrist hash 值，是否在历史上同一棋手处存在过。
 
 #### Not allow suicide
 

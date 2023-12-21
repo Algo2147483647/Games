@@ -1,5 +1,5 @@
-#include "GoDemo.h"
 #include <QtWidgets/QApplication>
+#include "GoDemo.h"
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);

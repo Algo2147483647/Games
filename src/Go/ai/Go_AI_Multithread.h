@@ -7,56 +7,13 @@
 #include <thread>
 #include "./core/Go.h"
 #include "thread_pool.h"
+#include "node.h"
 
 #define BANPOINT 0x7FFF
 #define EYEPOINT 0x7FFC
 #define THREADNUM 20
 
 namespace GoAI { 
-	/*
-	 *  Node of Monte-Carlo Tree
-	 */
-	struct Node {
-		// evalution of node
-		int value = 0,
-			visit = 0;
-
-		Go::State* state = NULL;
-		Node* parent = NULL;
-
-		// actions & next states
-		vector<int> actionSet;
-		unordered_map<int, Node*> child;  
-
-		// Constructor
-		Node(Go::State* _state, Node* _parent) {
-			state = _state;
-			parent = _parent;
-			generateActionSet();
-		}
-
-		// Destructor, when root is destructed, the entire tree will be destructed automatically 
-		~Node() {
-			// delete all child node except the best node
-			for (auto e = child.begin(); e != child.end(); e++) {
-				if (e->second == NULL)
-					continue;
-				delete e->second;
-			}
-
-			//delete state
-			delete state;
-		}
-
-		// generate action set randomly
-		void generateActionSet() {
-			actionSet.push_back(PASS);
-			for (int i = 0; i < BOARD_COLOR_NUM; i++)
-				if (state->mark[i] == -1)
-					actionSet.push_back(i);
-		}
-	};
-
 	inline mutex mutex_;
 	static int move_pos = -1;
 	static int evaluate_fg = 0;
@@ -95,7 +52,6 @@ namespace GoAI {
 				}
 			}
 
-			// main
 			Node* nd = root;
 
 			// Select 
