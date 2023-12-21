@@ -1,10 +1,11 @@
 #include "Controller.h"
 
 Controller::Controller(QWidget* parent) : QWidget(parent) {
-    resize(1000, 1000);
+    resize(Board::gridSize * (BOARD_SIZE + 0.5), Board::gridSize * (BOARD_SIZE + 0.5));
     setAttribute(Qt::WA_TranslucentBackground, true);
-
     setFocusPolicy(Qt::StrongFocus);
+
+    m_winLabel = new QLabel(this);
 
     Go::go_init();
     state = new Go::State();
@@ -40,12 +41,40 @@ void Controller::keyPressEvent(QKeyEvent* event) {
         if (pass.exec() == QMessageBox::Ok) {
             Go::play(*state, PASS);
             m_state_history.push_back(*state);
-            //displayWin();
+            displayWin();
 
             if (analysis->is_ai_open) {
                 //GoAI::move_pos = -1;
             }
         }
     } break;
+    }
+}
+
+void Controller::displayWin() {
+    if (Go::isTermination(*state)) {
+        Go::Color win = Go::computeReward(*state);
+
+        // Use a more modern and appealing font, adjust size and boldness as needed
+        QFont font("Arial", 60, QFont::Bold);
+        m_winLabel->setFont(font);
+
+        // Set the geometry to center the label in the window
+        int labelWidth = 1000;
+        int labelHeight = 100;
+        int windowCenterX = this->width() / 2;
+        int windowCenterY = this->height() / 2;
+        m_winLabel->setGeometry(windowCenterX - labelWidth / 2, windowCenterY - labelHeight / 2, labelWidth, labelHeight);
+
+        // Align text to the center
+        m_winLabel->setAlignment(Qt::AlignCenter);
+
+        // Set a background color and text color for better visibility
+        m_winLabel->setStyleSheet("QLabel { background-color : black; color : white; }");
+
+        if (win == Go::BLACK)
+            m_winLabel->setText("BLACK Wins!");
+        else if (win == Go::WHITE)
+            m_winLabel->setText("WHITE Wins!");
     }
 }

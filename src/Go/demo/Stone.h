@@ -21,9 +21,6 @@ public:
     QLabel* m_stoneMarks = new QLabel(this);
 
     Stone(QWidget* parent, int board_size) : QWidget(parent), m_board_size(board_size){
-        resize(1000, 1000);
-        setAttribute(Qt::WA_TranslucentBackground, true);
-
         m_stoneMarks->setStyleSheet("QLabel{background:#FF0000;}");
         m_stoneMarks->setGeometry(0, 0, 0, 0);
 

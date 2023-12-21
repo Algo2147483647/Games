@@ -11,7 +11,7 @@ namespace Go {
 	public:
 		// action (x, y, c)
 		short action = -2;
-		Color player = BLACK;
+		Color player = WHITE;
 
 		array<Color, BOARD_COLOR_NUM> board;
 		array<short, BOARD_COLOR_NUM> mark, next;

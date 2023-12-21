@@ -24,7 +24,7 @@ public:
     QWidget* m_controllerWidget;
 
     GoDemo(QWidget* parent = 0) : QMainWindow(parent) {
-        windowSize = Board::gridSize* (BOARD_SIZE + 0.5);
+        windowSize = Board::gridSize * (BOARD_SIZE + 0.5);
         setMaximumSize(windowSize, windowSize);
         setMinimumSize(windowSize, windowSize);
         setWindowTitle("Go");
