@@ -5,7 +5,7 @@
 #include <QPainter>
 #include <QWidget>
 #include <QLabel>
-#include "C:/Users/29753/Desktop/Projects/Games/src/Chess/Chess.h"
+#include "./core/Chess.h"
 
 class BoardClass : public QWidget
 {
@@ -33,7 +33,7 @@ public:
         //字体，大小，粗细（50正常），是否斜体
         QFont font("Times New Roman", 15, 50, true);
 
-        for (int i = 0; i < BOARDSIZE; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             xIndexLabel[i] = new QLabel(widget);
             yIndexLabel[i] = new QLabel(widget);
 
@@ -53,8 +53,8 @@ protected:
         QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing, true);
 
-        for (int i = 0; i < BOARDSIZE; i++) {
-            for (int j = 0; j < BOARDSIZE; j++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
                 if ((i + j) % 2 == 0)
                     painter.fillRect(
                         boardMargin + gridSize * i,

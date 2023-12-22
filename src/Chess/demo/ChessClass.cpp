@@ -13,7 +13,7 @@ ChessClass::ChessClass(QWidget* parent) : QWidget(parent)
 
     {
         QFont font("Times New Roman", 40, 50);
-        for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+        for (int i = 0; i < BOARD_PIECE_NUM; i++) {
             Chess[i] = new QLabel(this);
             Chess[i]->setAlignment(Qt::AlignCenter);
             Chess[i]->setFont(font);
@@ -21,7 +21,7 @@ ChessClass::ChessClass(QWidget* parent) : QWidget(parent)
     }
     {
         QFont font("Arial", 40, 50);
-        for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+        for (int i = 0; i < BOARD_PIECE_NUM; i++) {
             ChessEd[i] = new QLabel(this);
             ChessEd[i]->setFont(font);
             ChessEd[i]->setStyleSheet("color:Yellow");
@@ -35,8 +35,8 @@ ChessClass::ChessClass(QWidget* parent) : QWidget(parent)
 
     printChess(state->board);
 
-    //ChessAI::evaluate_result.resize(BOARDSIZE * BOARDSIZE, 0);
-    //ChessAI::evaluate_visit.resize(BOARDSIZE * BOARDSIZE, 0);
+    //ChessAI::evaluate_result.resize(BOARD_PIECE_NUM, 0);
+    //ChessAI::evaluate_visit.resize(BOARD_PIECE_NUM, 0);
 }
 
 /*
@@ -51,17 +51,12 @@ void ChessClass::mousePressEvent(QMouseEvent* e) {
         x = (e->y() - BoardClass::boardMargin) / BoardClass::gridSize;
 
         if (st != -1) {
-            int ed = x * BOARDSIZE + y;
+            int ed = x * BOARD_SIZE + y;
 
             if (st != ed) {
-                for (auto e = state->actionSet.begin(); e != state->actionSet.end(); e++) {
+                for (auto e = state->action_set.begin(); e != state->action_set.end(); e++) {
                     if (abs(e->first) / 64 == st && abs(e->first) % 64 == ed) {
                         {
-                            Chess::State* s_ = new Chess::State;
-                            *s_ = *state;
-                            s_->parent = state;
-                            state = s_;
-
                             state->action = e->first;
                             Chess::moveChess(*state);
                         }
@@ -72,51 +67,22 @@ void ChessClass::mousePressEvent(QMouseEvent* e) {
             }
 
             st = -1;
-            printEd(*state, x * BOARDSIZE + y);
+            printEd(*state, x * BOARD_SIZE + y);
         }
         else {
-            if (state->board[x * BOARDSIZE + y] != 0) {
-                if (printEd(*state, x * BOARDSIZE + y)) {
-                    st = x * BOARDSIZE + y;
+            if (state->board[x * BOARD_SIZE + y] != 0) {
+                if (printEd(*state, x * BOARD_SIZE + y)) {
+                    st = x * BOARD_SIZE + y;
                 }
             }
-        }
-
-        //Chess::moveChess(*state);
-
-        
-        //printChess(state->board);
-
-        if (ai_is_open) {
-            //ChessAI::move_pos = x * BOARDSIZE + y;
         }
     }
     else if (e->button() == Qt::RightButton) {
 
     }
     else if (e->button() == Qt::MiddleButton) {
-        if (state->parent != NULL) {  
-            Chess::State* s = state;
-            state = state->parent;
-            s->parent = NULL;
-            delete s;
-        }
-
         printChess(state->board);
     }
-    
-    /* // if win
-    
-    if (Chess::judgeWin(*state) == BLACK) {
-        printWin(BLACK);
-        return;
-    }
-
-    if (Chess::judgeWin(*state) == WHITE) {
-        printWin(WHITE);
-        return;
-    }
-    );*/
 }
 
 /*
@@ -149,11 +115,11 @@ void ChessClass::openAI() {  /*
  */
 void ChessClass::aiEvaluate() { /*
     static int fg = 0;
-    static QLabel** labels = new QLabel * [BOARDSIZE * BOARDSIZE];
+    static QLabel** labels = new QLabel * [BOARD_PIECE_NUM];
     static QFont font("Times New Roman", 12, 50);
 
     if (fg == 0) {
-        for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+        for (int i = 0; i < BOARD_PIECE_NUM; i++) {
             labels[i] = new QLabel(w);
             labels[i]->setFont(font);
             labels[i]->setAlignment(Qt::AlignCenter);
@@ -168,17 +134,17 @@ void ChessClass::aiEvaluate() { /*
         ChessAI::evaluate_fg = 1;
         QThread::msleep(50);
 
-        for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++)
+        for (int i = 0; i < BOARD_PIECE_NUM; i++)
             if (state->mark[i] == -1 && maxn < ChessAI::evaluate_result[i]) {
                 maxn = ChessAI::evaluate_result[i];
                 maxi = i;
             } 
     } 
 
-    for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+    for (int i = 0; i < BOARD_PIECE_NUM; i++) {
         if ((state->mark[i] == -1) && fg == 1) {
-            int x = i / BOARDSIZE,
-                y = i % BOARDSIZE,
+            int x = i / BOARD_SIZE,
+                y = i % BOARD_SIZE,
                 v = ChessAI::evaluate_result[i] * 100;   
 
             if(i == maxi)
@@ -204,11 +170,11 @@ void ChessClass::aiEvaluate() { /*
  */
 void ChessClass::aiEvaluate_visit() { /*
     static int fg = 0;
-    static QLabel** labels = new QLabel * [BOARDSIZE * BOARDSIZE];
+    static QLabel** labels = new QLabel * [BOARD_PIECE_NUM];
     static QFont font("Times New Roman", 8, 50);
 
     if (fg == 0) {
-        for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+        for (int i = 0; i < BOARD_PIECE_NUM; i++) {
             labels[i] = new QLabel(w);
             labels[i]->setFont(font);
             labels[i]->setAlignment(Qt::AlignCenter);
@@ -222,10 +188,10 @@ void ChessClass::aiEvaluate_visit() { /*
         QThread::msleep(50);
     }
 
-    for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+    for (int i = 0; i < BOARD_PIECE_NUM; i++) {
         if ((state->mark[i] == -1) && fg == 1) {
-            int x = i / BOARDSIZE,
-                y = i % BOARDSIZE,
+            int x = i / BOARD_SIZE,
+                y = i % BOARD_SIZE,
                 v = ChessAI::evaluate_visit[i];
 
             labels[i]->setText(QString::fromStdString(to_string(v)));
@@ -244,13 +210,13 @@ void ChessClass::aiEvaluate_visit() { /*
 /*
  *  显示棋子
  */
-void ChessClass::printChess(Mat<Chess::Piece>& board) {
+void ChessClass::printChess(std::array<Chess::Piece, BOARD_PIECE_NUM>& board) {
     QPalette pe;
 
-    for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+    for (int i = 0; i < BOARD_PIECE_NUM; i++) {
         if (board[i] != 0) {
-            int x = i / BOARDSIZE,
-                y = i % BOARDSIZE;
+            int x = i / BOARD_SIZE,
+                y = i % BOARD_SIZE;
 
             x = BoardClass::boardMargin + (x + 0.05) * BoardClass::gridSize;
             y = BoardClass::boardMargin + (y + 0.05) * BoardClass::gridSize;
@@ -288,11 +254,11 @@ bool ChessClass::printEd(Chess::State& s, int st) {
     int num = 0;
 
     if (fg == 1) {
-        for (auto e = state->actionSet.begin(); e != state->actionSet.end(); e++) {
+        for (auto e = state->action_set.begin(); e != state->action_set.end(); e++) {
             if (abs(e->first) / 64 == st) {
                 int ed = abs(e->first) % 64,
-                    x = ed / BOARDSIZE,
-                    y = ed % BOARDSIZE;
+                    x = ed / BOARD_SIZE,
+                    y = ed % BOARD_SIZE;
 
                 ChessEd[ed]->setText((QString)"〇");
                 ChessEd[ed]->setGeometry(
@@ -305,7 +271,7 @@ bool ChessClass::printEd(Chess::State& s, int st) {
         }
     }
     else {
-        for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+        for (int i = 0; i < BOARD_PIECE_NUM; i++) {
             ChessEd[i]->hide();
         }
     }
@@ -323,15 +289,15 @@ bool ChessClass::printEd(Chess::State& s, int st) {
  *  显示对方控制点
  */
 
-void opponentControlPoint(Chess::State& s, Mat<int>& mark, int player);
+void opponentControlPoint(Chess::State& s, std::array<int, BOARD_PIECE_NUM>& mark, int player);
 
 void ChessClass::printOpponentControlPoint(Chess::State& s) {
     static int fg = 0;
-    static QLabel ** labels = new QLabel * [BOARDSIZE * BOARDSIZE];
+    static QLabel ** labels = new QLabel * [BOARD_PIECE_NUM];
 
     if (fg == 0) {
         QFont font("Arial", 80, 50);
-        for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+        for (int i = 0; i < BOARD_PIECE_NUM; i++) {
             labels[i] = new QLabel(this);
             labels[i]->setFont(font);
             labels[i]->setStyleSheet("color:Yellow");
@@ -342,13 +308,13 @@ void ChessClass::printOpponentControlPoint(Chess::State& s) {
     }
 
     if (fg == 1) {
-        Mat<int> mark;
+        std::array<int, BOARD_PIECE_NUM> mark;
         opponentControlPoint(*state, mark, -s.player);
 
-        for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+        for (int i = 0; i < BOARD_PIECE_NUM; i++) {
             if (mark[i] > 0) {
-                int x = i / BOARDSIZE,
-                    y = i % BOARDSIZE;
+                int x = i / BOARD_SIZE,
+                    y = i % BOARD_SIZE;
 
                 labels[i]->setText((QString)"×");
                 labels[i]->setGeometry(
@@ -359,20 +325,20 @@ void ChessClass::printOpponentControlPoint(Chess::State& s) {
         }
     }
     else {
-        for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+        for (int i = 0; i < BOARD_PIECE_NUM; i++) {
             labels[i]->hide();
         }
     }
     fg = -fg;
 }
 
-void opponentControlPoint(Chess::State& s, Mat<int>& mark, int player) {
-    mark.zero(BOARDSIZE, BOARDSIZE);
+void opponentControlPoint(Chess::State& s, std::array<int, BOARD_PIECE_NUM>& mark, int player) {
+    mark.fill(0);
 
-    for (int i = 0; i < BOARDSIZE * BOARDSIZE; i++) {
+    for (int i = 0; i < BOARD_PIECE_NUM; i++) {
         if (s.board[i] * player > 0) {
-            int x = i / BOARDSIZE,
-                y = i % BOARDSIZE,
+            int x = i / BOARD_SIZE,
+                y = i % BOARD_SIZE,
                 p = s.board[i];
 
             switch (abs(p)) {
@@ -381,11 +347,11 @@ void opponentControlPoint(Chess::State& s, Mat<int>& mark, int player) {
                     int xt = x + Chess::x_step[j],
                         yt = y + Chess::y_step[j];
 
-                    if (xt < 0 || xt >= BOARDSIZE ||
-                        yt < 0 || yt >= BOARDSIZE)
+                    if (xt < 0 || xt >= BOARD_SIZE ||
+                        yt < 0 || yt >= BOARD_SIZE)
                         continue;
 
-                    mark[xt * BOARDSIZE + yt] += 1;
+                    mark[xt * BOARD_SIZE + yt] += 1;
                 }
 
             } break;
@@ -400,16 +366,16 @@ void opponentControlPoint(Chess::State& s, Mat<int>& mark, int player) {
                         int xt = x + t * Chess::x_step[j],
                             yt = y + t * Chess::y_step[j];
 
-                        if (xt < 0 || xt >= BOARDSIZE ||
-                            yt < 0 || yt >= BOARDSIZE)
+                        if (xt < 0 || xt >= BOARD_SIZE ||
+                            yt < 0 || yt >= BOARD_SIZE)
                             break;
 
-                        if (s.board(xt, yt) != 0) {
-                            mark[xt * BOARDSIZE + yt] += 1;
+                        if (s.getBoard(xt, yt) != Chess::EMPTY) {
+                            mark[xt * BOARD_SIZE + yt] += 1;
                             break;
                         }
 
-                        mark[xt * BOARDSIZE + yt] += 1;
+                        mark[xt * BOARD_SIZE + yt] += 1;
                     }
                 }
             } break;
@@ -419,25 +385,25 @@ void opponentControlPoint(Chess::State& s, Mat<int>& mark, int player) {
                     int xt = x + Chess::x_step[j] * 2,
                         yt = y + Chess::y_step[j] * 1;
 
-                    if (!(xt < 0 || xt >= BOARDSIZE ||
-                          yt < 0 || yt >= BOARDSIZE))
-                        mark[xt * BOARDSIZE + yt] += 1;
+                    if (!(xt < 0 || xt >= BOARD_SIZE ||
+                          yt < 0 || yt >= BOARD_SIZE))
+                        mark[xt * BOARD_SIZE + yt] += 1;
 
                     // (1, 2)
                     xt = x + Chess::x_step[j] * 1,
                     yt = y + Chess::y_step[j] * 2;
 
-                    if (!(xt < 0 || xt >= BOARDSIZE ||
-                        yt < 0 || yt >= BOARDSIZE))
-                        mark[xt * BOARDSIZE + yt] += 1;
+                    if (!(xt < 0 || xt >= BOARD_SIZE ||
+                        yt < 0 || yt >= BOARD_SIZE))
+                        mark[xt * BOARD_SIZE + yt] += 1;
                 }
             } break;
             case Chess::PAWN: {
                 int x_ = x + (p > 0 ? -1 : +1);
                 if(y - 1 >= 0)
-                    mark[x_ * BOARDSIZE + (y - 1)] += 1;
-                if (y + 1 < BOARDSIZE)
-                    mark[x_ * BOARDSIZE + (y + 1)] += 1;
+                    mark[x_ * BOARD_SIZE + (y - 1)] += 1;
+                if (y + 1 < BOARD_SIZE)
+                    mark[x_ * BOARD_SIZE + (y + 1)] += 1;
             }  break;
             }
         }

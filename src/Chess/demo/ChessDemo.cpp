@@ -1,7 +1,7 @@
 #include "ChessDemo.h"
 
 ChessDemo::ChessDemo(QWidget* parent) : QMainWindow(parent) {
-    windowSize = BoardClass::gridSize * (BOARDSIZE + 1.2);
+    windowSize = BoardClass::gridSize * (BOARD_SIZE + 1.2);
     setMaximumSize(windowSize, windowSize);
     setMinimumSize(windowSize, windowSize);  //固定软件界面的大小
     setWindowTitle("Chess");
@@ -9,7 +9,7 @@ ChessDemo::ChessDemo(QWidget* parent) : QMainWindow(parent) {
 
     // BoardClass 
     setGridWidget(BoardWidget);
-    boardClass = new BoardClass(BoardWidget, BOARDSIZE);
+    boardClass = new BoardClass(BoardWidget, BOARD_SIZE);
     boardClass->setGeometry(0, 0, windowSize, windowSize);
 
     // ChessClass 

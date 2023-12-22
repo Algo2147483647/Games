@@ -9,7 +9,7 @@
 #include <QKeyEvent>
 #include <QThread> 
 #include <stdio.h>
-#include "C:/Users/29753/Desktop/Projects/Games/src/Chess/Chess.h"
+#include "./core/Chess.h"
 #include "BoardClass.h"
 #include "ThreadClass.h"
 
@@ -26,8 +26,8 @@ private:
     QWidget* w;
     int ai_is_open = 0;
 
-    QLabel* Chess[BOARDSIZE * BOARDSIZE];
-    QLabel* ChessEd[BOARDSIZE * BOARDSIZE];
+    QLabel* Chess[BOARD_PIECE_NUM];
+    QLabel* ChessEd[BOARD_PIECE_NUM];
     QLabel* ChessWarn = new QLabel(this);
     QLabel* WinLable  = new QLabel(this);
 
@@ -37,7 +37,7 @@ private:
     void aiEvaluate();
     void aiEvaluate_visit();
 
-    void printChess(Mat<Chess::Piece>& Board);
+    void printChess(std::array<Chess::Piece, BOARD_PIECE_NUM>& Board);
     void printWin(int win);
     bool printEd(Chess::State& s, int st);
     void printOpponentControlPoint(Chess::State& s);
