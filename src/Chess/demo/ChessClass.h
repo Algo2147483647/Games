@@ -26,20 +26,16 @@ private:
     QWidget* w;
     int ai_is_open = 0;
 
-    QLabel* Chess[BOARD_PIECE_NUM];
-    QLabel* ChessEd[BOARD_PIECE_NUM];
-    QLabel* ChessWarn = new QLabel(this);
-    QLabel* WinLable  = new QLabel(this);
+    array<QLabel*, BOARD_PIECE_NUM> m_pieces;
+    array<QLabel*, BOARD_PIECE_NUM> m_chess_actions;
+    QLabel* m_action_warn;
+    QLabel* m_win_lable;
 
-    Chess::State* state = new Chess::State();
+    Chess::State* state;
 
-    void openAI();
-    void aiEvaluate();
-    void aiEvaluate_visit();
-
-    void printChess(std::array<Chess::Piece, BOARD_PIECE_NUM>& Board);
-    void printWin(int win);
-    bool printEd(Chess::State& s, int st);
-    void printOpponentControlPoint(Chess::State& s);
+    void displayChess(std::array<Chess::Piece, BOARD_PIECE_NUM>& board);
+    void displayWin(int win);
+    bool displayActions(Chess::State& s, int st);
+    void displayOpponentControlPoint(Chess::State& s);
 };
 #endif

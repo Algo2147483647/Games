@@ -13,7 +13,7 @@ using namespace std;
 namespace Go {
 #define PASS  -1
 #define BOARD_SIZE 19 // For a standard board
-#define BOARD_COLOR_NUM BOARD_SIZE * BOARD_SIZE
+#define BOARD_COLOR_NUM (BOARD_SIZE * BOARD_SIZE)
 
 	/*
 	 * possible contents of a vertex

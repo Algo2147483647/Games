@@ -11,11 +11,12 @@ using namespace std;
 
 namespace Chess {
 #define BOARD_SIZE 8
-#define BOARD_PIECE_NUM  BOARD_SIZE * BOARD_SIZE
-#define BLACK  1
-#define WHITE -1
+#define BOARD_PIECE_NUM  (BOARD_SIZE * BOARD_SIZE)
 
     // Chess Piece
+    enum { BLACK = 1, WHITE = -1 };
+    typedef char Color;
+
     enum { EMPTY = 0, KING, QUEEN, BISHOP, ROOK, KNIGHT, PAWN };
     typedef char Piece;
 
@@ -34,26 +35,27 @@ namespace Chess {
 
     class State {
     public:
-        short action = -1;
-        char  player = -1;
+        int action = -1;
+        Color player = WHITE;
 
         array<Piece, BOARD_PIECE_NUM> board;
         unordered_map<int, int> action_set;
 
         // Special Rule Flag
-        int king_move = 0,
-            rook_move = 0,
-            pawn_move_two = -1;
+        char king_move = 0;
+        char rook_move = 0;
+        char pawn_move_two = -1;
 
         State() {
             board.fill(EMPTY);
+            initBoard(board);
         }
 
-        inline bool isLegalAction(int i, int x, int y) {
-            if (x < 0 || x >= BOARD_SIZE ||
-                y < 0 || y >= BOARD_SIZE)
+        inline bool isLegalAction(int st, int ed_x, int ed_y) {
+            if (ed_x < 0 || ed_x >= BOARD_SIZE ||
+                ed_y < 0 || ed_y >= BOARD_SIZE)
                 return false;
-            if (getBoard(x, y) * board[i] > 0)
+            if (getBoard(ed_x, ed_y) * board[st] > 0)
                 return false;
             return true;
         }
@@ -71,11 +73,11 @@ namespace Chess {
             return true;
         }
 
-        inline bool setActionSet(int i, int x, int y, int v) {
-            if(!isLegalAction(i, x, y))
+        inline bool setActionSet(int st, int ed_x, int ed_y, int v) {
+            if(!isLegalAction(st, ed_x, ed_y))
                 return false;
 
-            action_set[i * BOARD_PIECE_NUM + x * BOARD_SIZE + y] = v;
+            action_set[st * BOARD_PIECE_NUM + ed_x * BOARD_SIZE + ed_y] = v;
             return true;
         }
     };

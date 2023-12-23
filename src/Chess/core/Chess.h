@@ -12,5 +12,11 @@
 using namespace std;
 
 namespace Chess {
+	inline State& play(State& s) {
+		updateState(s);
+		s.player = -s.player;
+		createActionSet(s);
+		return s;
+	}
 }
 #endif
