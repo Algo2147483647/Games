@@ -2,7 +2,6 @@
 #define GO_AI_MULTITHREAD_H
 
 #include <random>
-#include <unordered_map>
 #include <algorithm>
 #include <thread>
 #include "./core/Go.h"
@@ -104,18 +103,18 @@ namespace GoAI {
 					continue;
 
 				//核心判断
-				if ((s.board[vt] == 0)) {
+				if ((s.board[v] == 0)) {
 					isEye = isBan = 0;
 					break;
 				}
 				if (isEye == 0x7F)
-					isEye = s.board[vt];
+					isEye = s.board[v];
 
-				if (s.board[vt] != isEye || s.qi[s.mark[vt]] == 1)
+				if (s.board[v] != isEye || s.qi[s.mark[v]] == 1)
 					isEye = 0; 	//同一色，且均非一气
 
-				if ((s.board[vt] == player && s.qi[s.mark[vt]] != 1) ||	//若是我，应只一气
-					(s.board[vt] != player && s.qi[s.mark[vt]] == 1)) 	//若是敌，应必不只一气
+				if ((s.board[v] == player && s.qi[s.mark[v]] != 1) ||	//若是我，应只一气
+					(s.board[v] != player && s.qi[s.mark[v]] == 1)) 	//若是敌，应必不只一气
 					isBan = 0;
 			}
 
@@ -136,15 +135,14 @@ namespace GoAI {
 				 * s_ = new Go::State(),
 				 * s  = nd->state;
 			*s_ = *s;
-			s_->parent = s;
-			s_->player =-s->player; 
+			s_->player = Go::Color(-s->player);
 			s_->action = nd->actionSet[i];
 
 			// new Node 
 			Node* newNode = NULL;
 
 			if (Go::updateState(*s_)) {
-				judgeBanAndEye(*s_, -(*s_).player);
+				judgeBanAndEye(*s_, Go::Color(-(*s_).player));
 
 				// Simulate
 				int reward = Simulate(*s_);
@@ -188,27 +186,20 @@ namespace GoAI {
 	inline int Simulate(Go::State& _s) {
 		Go::State s = _s;
 
-		int oldSCur = 0;
-		vector<Go::State> oldS(7);
-
 		while (!Go::isTermination(s)) {
-			// save old states to help judge Jie
-			oldS[oldSCur] = s; 
-			oldSCur = (oldSCur + 1) % 7;
-
-			s.player = -s.player;
-			s.parent = &oldS[(oldSCur - 1 + 7) % 7];
+			s.player = Go::Color(-s.player);
 
 			// count how many actions we can choose
-			int num = 0, 
-				randnum = rand();
-
-			for (int i = 0; i < BOARD_COLOR_NUM; i++)
+			int num = 0;
+			int randnum = rand();
+			for (int i = 0; i < BOARD_COLOR_NUM; i++) {
 				if (s.mark[i] == -1)
-					num++; 
+					num++;
+			}
 
 			// randomly choose an action
 			while (num > 0) {
+				Go::State s_ = s;
 				int index = randnum % num + 1;
 
 				for (int i = 0; i < BOARD_COLOR_NUM; i++) {
@@ -222,25 +213,22 @@ namespace GoAI {
 				}
 
 				if (Go::updateState(s)) {
-					judgeBanAndEye(s, -s.player);
+					judgeBanAndEye(s, Go::Color(-s.player));
 					break;
 				}
 				else {  
 					// if this action is invalid
 					num--;
-					
-					oldS[(oldSCur - 1 + 7) % 7].mark[s.action] = BANPOINT;
-
-					s = oldS[(oldSCur - 1 + 7) % 7];
-					s.player = -s.player;
-					s.parent = &oldS[(oldSCur - 1 + 7) % 7];
+					s_.mark[s.action] = BANPOINT;
+					s = s_;
+					s.player = Go::Color(-s.player);
 				}
 			} 
 
 			if (num == 0) {
 				s.action = PASS; 
 				Go::updateState(s); 
-				judgeBanAndEye(s, -s.player);
+				judgeBanAndEye(s, Go::Color(-s.player));
 			}
 		}
 		int reward = Go::computeReward(s);

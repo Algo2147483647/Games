@@ -10,7 +10,9 @@
 #include <QThread> 
 #include <QMessageBox>
 #include "Board.h"
+//#include "ThreadAI.h"
 #include "./core/Go.h"
+#include "./ai/Go_AI_Multithread.h"
 
 class Analysis : public QWidget
 {
@@ -37,88 +39,15 @@ public:
     void displaySerialNumber(vector<Go::State>& ss);
     void displayQi(Go::State& s);
     void displayMark(Go::State& s);
+
+    void openAI(Go::State& s);
+    void aiEvaluate(Go::State& s);
 };
 
 #endif
-//
-//void openAI();
-//void aiEvaluate();
-//void aiEvaluate_visit();
-//void displayQi(Go::State& s);
-//void displayMark(Go::State& s);
-//
-//
-////GoAI::evaluate_result.resize(BOARD_COLOR_NUM, 0);
-////GoAI::evaluate_visit. resize(BOARD_COLOR_NUM, 0);
-//
-//void Stone::openAI() {
-//    //static ThreadClass ai;
-//    static QThread thread;
-//
-//    if (ai_is_open == 0) {
-//        ai_is_open = 1;
-//        //ai.s = state;
-//
-//       // QObject::connect(&thread, &QThread::started, &ai, &ThreadClass::openAI);
-//        //ai.moveToThread(&thread);
-//        //thread.start();
-//    }
-//    return;
-//}
-//
-///*
-// *  显示AI评估结果
-// */
-//void Stone::aiEvaluate() {
-//    static int fg = 0;
-//    static QLabel** labels = new QLabel * [BOARD_COLOR_NUM];
-//    static QFont font("Times New Roman", 12, 50);
-//
-//    if (fg == 0) {
-//        for (int i = 0; i < BOARD_COLOR_NUM; i++) {
-//            labels[i] = new QLabel(w);
-//            labels[i]->setFont(font);
-//            labels[i]->setAlignment(Qt::AlignCenter);
-//        }
-//        fg = 1;
-//    }
-//
-//    float maxn = -0x7FFFFFFF;
-//    int maxi = 0;
-//
-//    if (fg == 1) {
-//        //GoAI::evaluate_fg = 1;
-//        QThread::msleep(50);
-//
-//        //for (int i = 0; i < BOARD_COLOR_NUM; i++)
-//            //if (state->mark[i] == -1 && maxn < GoAI::evaluate_result[i]) {
-//                //maxn = GoAI::evaluate_result[i];
-//                //maxi = i;
-//            //} 
-//    }
-//
-//    for (int i = 0; i < BOARD_COLOR_NUM; i++) {
-//        if ((state->mark[i] == -1) && fg == 1) {
-//            int x = i % BOARD_SIZE,
-//                y = i / BOARD_SIZE;
-//            //v = GoAI::evaluate_result[i] * 100
-//
-//            if (i == maxi)
-//                labels[i]->setStyleSheet("color:Red");
-//            else
-//                labels[i]->setStyleSheet("color:Blue");
-//
-//            //labels[i]->setText(QString::fromStdString(to_string(v)));
-//            labels[i]->setGeometry(
-//                Board::boardMargin + Board::gridSize * (x - 0.36),
-//                Board::boardMargin + Board::gridSize * (y - 0.35), 30, 30);
-//            labels[i]->show();
-//        }
-//        else
-//            labels[i]->hide();
-//    }
-//    fg = -fg;
-//}
+
+
+
 //
 ///*
 // *  显示AI评估结果

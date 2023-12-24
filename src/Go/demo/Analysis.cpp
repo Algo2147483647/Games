@@ -60,3 +60,27 @@ void Analysis::displayMark(Go::State& s) {
     }
     displayAnalysis();
 }
+
+void Analysis::openAI(Go::State& s) {
+    if (is_ai_open == false) {
+        is_ai_open = true;
+        std::thread myThread(GoAI::MonteCarloTreeSearch, &s);
+        myThread.detach();
+    }
+    return;
+}
+
+/*
+ *  ÏÔÊ¾AIÆÀ¹À½á¹û
+ */
+void Analysis::aiEvaluate(Go::State& s) {
+    m_labels_string.fill("");
+
+    for (int i = 0; i < BOARD_COLOR_NUM; i++) {
+        if (s.mark[i] == -1) {
+            m_labels_string[i] = to_string(GoAI::evaluate_result[i] * 100);
+        }
+    }
+
+    displayAnalysis();
+}

@@ -22,21 +22,30 @@ void Controller::mousePressEvent(QMouseEvent* event) {
         stone->displayStone(state->board);
     }
     else if (event->button() == Qt::MiddleButton) {
+        if (m_state_history.size() >= 2) {
+            *state = m_state_history[m_state_history.size() - 2];
+            m_state_history.pop_back();
+        }
         stone->displayStone(state->board);
     }
 }
 
 void Controller::keyPressEvent(QKeyEvent* event) {
     switch (event->key()) {
-        //case Qt::Key_A: analysis.openAI(); break;
-        //case Qt::Key_S: analysis.aiEvaluate(); break;
-        //case Qt::Key_D: analysis.aiEvaluate_visit(); break;
+    case Qt::Key_A: {
+        QMessageBox pass(QMessageBox::NoIcon, "Confirm AI?", "Open AI?", QMessageBox::Ok | QMessageBox::Cancel);
+
+        if (pass.exec() == QMessageBox::Ok) {
+            analysis->openAI(*state);
+        }
+    } break;
+    case Qt::Key_S: analysis->aiEvaluate(*state); break;
+        //case Qt::Key_D: analysis->aiEvaluate_visit(); break;
     case Qt::Key_Q: analysis->displayQi(*state); break;
     case Qt::Key_M: analysis->displayMark(*state); break;
     case Qt::Key_N: analysis->displaySerialNumber(m_state_history); break;
     case Qt::Key_P: {
-        QMessageBox pass(QMessageBox::NoIcon, "Confirm Pass?", "Do you want to Pass?",
-            QMessageBox::Ok | QMessageBox::Cancel);
+        QMessageBox pass(QMessageBox::NoIcon, "Confirm Pass?", "Do you want to Pass?", QMessageBox::Ok | QMessageBox::Cancel);
 
         if (pass.exec() == QMessageBox::Ok) {
             Go::play(*state, PASS);
