@@ -64,8 +64,8 @@ void Analysis::displayMark(Go::State& s) {
 void Analysis::openAI(Go::State& s) {
     if (is_ai_open == false) {
         is_ai_open = true;
-        std::thread myThread(GoAI::MonteCarloTreeSearch, &s);
-        myThread.detach();
+        //myThread = std::thread(GoAI::MonteCarloTreeSearch, &s);
+        //myThread.detach();
     }
     return;
 }
