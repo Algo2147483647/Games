@@ -35,8 +35,8 @@ namespace GoAI {
 
 		// generate action set randomly
 		void generateActionSet() {
-			actionSet.push_back(PASS);
-			for (int i = 0; i < BOARD_COLOR_NUM; i++)
+			actionSet.push_back(Go::PASS);
+			for (int i = 0; i < Go::BOARD_COLOR_NUM; i++)
 				if (state->mark[i] == -1)
 					actionSet.push_back(i);
 		}

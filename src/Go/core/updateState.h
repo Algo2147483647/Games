@@ -1,7 +1,7 @@
 #ifndef GO_UPDATE_STATE_H
 #define GO_UPDATE_STATE_H
 
-#include "include.h"
+#include "config.h"
 #include "action.h"
 
 using namespace std;

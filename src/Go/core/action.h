@@ -1,7 +1,7 @@
 #ifndef GO_ACTION_H
 #define GO_ACTION_H
 
-#include "include.h"
+#include "config.h"
 #include "state.h"
 
 using namespace std;

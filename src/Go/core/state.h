@@ -1,7 +1,7 @@
 #ifndef GO_STATE_H
 #define GO_STATE_H
 
-#include "include.h"
+#include "config.h"
 #include "zobristHash.h"
 
 using namespace std;

@@ -11,9 +11,10 @@
 using namespace std;
 
 namespace Go {
-#define PASS  -1
-#define BOARD_SIZE 19 // For a standard board
-#define BOARD_COLOR_NUM (BOARD_SIZE * BOARD_SIZE)
+	static constexpr auto BOARD_SIZE = 19;
+	static constexpr auto BOARD_COLOR_NUM = BOARD_SIZE * BOARD_SIZE;
+	static constexpr auto PASS = -1;
+	static constexpr auto KOMI = 7.5f;
 
 	/*
 	 * possible contents of a vertex

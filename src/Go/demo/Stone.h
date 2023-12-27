@@ -28,7 +28,7 @@ public:
             m_stones.push_back(new QLabel(this));
     }
 
-    void displayStone(std::array<Go::Color, BOARD_COLOR_NUM>& board) {
+    void displayStone(std::array<Go::Color, Go::BOARD_COLOR_NUM>& board) {
         for (int i = 0; i < m_board_size * m_board_size; i++) {
             if (board[i] != 0) {
                 int x = i % m_board_size;

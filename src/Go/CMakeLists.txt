@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(Go)
 
 # Set the C++ standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -27,6 +27,6 @@ file(GLOB PROJECT_SOURCES
 find_package(Qt6 COMPONENTS Core Gui Widgets REQUIRED)
 
 # Add executable
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} "core/zobristHash.cpp")
 target_link_libraries(${PROJECT_NAME} Qt${QT_VERSION_MAJOR}::Widgets)
 

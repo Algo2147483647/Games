@@ -12,6 +12,8 @@
 #define EYEPOINT 0x7FFC
 #define THREADNUM 20
 
+using namespace Go;
+
 namespace GoAI { 
 	inline mutex mutex_;
 	static int move_pos = -1;

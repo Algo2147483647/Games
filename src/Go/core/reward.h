@@ -1,7 +1,7 @@
 #ifndef GO_REWARD_H
 #define GO_REWARD_H
 
-#include "include.h"
+#include "config.h"
 #include "state.h"
 
 using namespace std;
@@ -44,11 +44,9 @@ namespace Go {
 	 *  compute reward of termination state and judge victory
 	 */
 	inline Color computeReward(State& s) {
-		float komi = 7.5;
-
 		auto white = calculateReachColor(s.board, WHITE);
 		auto black = calculateReachColor(s.board, BLACK);
-		return (black - white - komi) >= 0 ? BLACK : WHITE;
+		return (black - white - KOMI) >= 0 ? BLACK : WHITE;
 	}
 }
 #endif
