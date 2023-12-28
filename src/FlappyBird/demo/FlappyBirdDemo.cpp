@@ -1,65 +1,66 @@
-#include "FlappyBirdDemo.h"
+﻿#include "FlappyBirdDemo.h"
 
 FlappyBirdDemo::FlappyBirdDemo(QWidget* parent) : QMainWindow(parent) {
-    setFixedSize(400, 400);
+    setFixedSize(windows_size_width, windows_size_height);
+    setWindowTitle("Flappy Bird");
+    setWindowOpacity(0.8);
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &FlappyBirdDemo::updateGame);
-    timer->start(20);
+    timer->start(100);
 
-    core = new FlappyBird(500, 500);
+    core = new FlappyBird(windows_size_width, windows_size_height);
 }
 
-int main_() {
-    FlappyBird game(500, 500);
-    QLearning ai(game.windows_size.second * game.windows_size.first, 2);
+void FlappyBirdDemo::paintEvent(QPaintEvent* event) {
+    Q_UNUSED(event);
 
+    drawBird();
+    drawPillars();
+}
 
-    while (true) {
-        int i = 0;
-        game.init();
-        while (true) {
-            // play
-            int dx = game.pillars->pillarHoles[0].first;
-            int dy = game.bird->position.second - game.pillars->pillarHoles[0].second;
-            int state = dy * game.windows_size.first + dx;
-            int action = ai.chooseAction(state);
-            int isSuccess = game.play(action);
+void FlappyBirdDemo::drawBird() {
+    QPainter painter(this);
+    QFont font;
+    font.setPointSize(36);
+    painter.setFont(font);
+    QTransform transform;
+    transform.scale(-1, 1);
+    painter.setTransform(transform);
+    painter.drawText(-core->bird->position.first, 500 - core->bird->position.second, "🕊️");
+}
 
-            // feedback ai
-            double R = 1;
-            if (!isSuccess)
-                R = -100;
-            else if (game.pillars->pillarHoles[0].first <= -game.pillars->pillar_width)
-                R = 15;
-            ai.feedback(state, action, R);
+void FlappyBirdDemo::drawPillars() {
+    QPainter painter(this);
+    painter.setPen(Qt::NoPen);  // 设置画笔为透明，不绘制边框
+    painter.setBrush(Qt::green);
 
-            i++;
-            if (!isSuccess)
-                break;
-        }printf("%d ", i++);
+    for (auto& e : core->pillars->pillarHoles) {
+        // 上半部分
+        QRectF upperRect(e.first, e.second + core->pillars->hole_size, core->pillars->pillar_width, windows_size_height);
+        QLinearGradient upperGradient(upperRect.topLeft(), upperRect.bottomLeft());
+        upperGradient.setColorAt(0, Qt::darkGreen);
+        upperGradient.setColorAt(0.5, Qt::green);
+        upperGradient.setColorAt(1, Qt::darkGreen);
+        painter.fillRect(upperRect, upperGradient);
+
+        // 下半部分
+        QRectF lowerRect(e.first, 0, core->pillars->pillar_width, e.second - core->pillars->hole_size);
+        QLinearGradient lowerGradient(lowerRect.topLeft(), lowerRect.bottomLeft());
+        lowerGradient.setColorAt(0, Qt::darkGreen);
+        lowerGradient.setColorAt(0.5, Qt::green);
+        lowerGradient.setColorAt(1, Qt::darkGreen);
+        painter.fillRect(lowerRect, lowerGradient);
     }
 }
 
-void FlappyBirdDemo::paintEvent(QPaintEvent* event) override {
-    Q_UNUSED(event);
-
-    QPainter painter(this);
-
-    // ���Ʊ���
-    painter.fillRect(rect(), Qt::white);
-
-    // ����С��
-    painter.setBrush(Qt::blue);
-    painter.drawEllipse(core->bird->position.first, core->bird->position.second, birdSize, birdSize);
-}
-
-void FlappyBirdDemo::keyPressEvent(QKeyEvent* event) override {
+void FlappyBirdDemo::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Space) {
         core->play(1);
     }
 }
 
 void FlappyBirdDemo::updateGame() {
+    core->play(0);
     update();
 }

@@ -1,7 +1,8 @@
 #ifndef FLAPPY_BIRD_H
 #define FLAPPY_BIRD_H
 
-#include "model.h"
+#include "Bird.h"
+#include "Pillars.h"
 
 using namespace std;
 
