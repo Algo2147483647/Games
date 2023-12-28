@@ -7,6 +7,7 @@
 #include <QLabel>
 #include <QKeyEvent>
 #include <QTimer>
+#include <QImageReader>
 #include "./core/FlappyBird.h"
 #include "./ai/ai.h"
 

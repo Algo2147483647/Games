@@ -32,7 +32,7 @@ public:
         for (auto& e : pillarHoles) {
             e.first -= speed_x;
             if (e.first < -pillar_width) {
-                e.first = windows_size.first + pillar_width;
+                e.first = windows_size.first;
                 e.second = int(randDouble_01() * windows_size.second);
             }
         }

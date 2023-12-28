@@ -20,7 +20,7 @@ file(GLOB PROJECT_SOURCES
      "${PROJECT_SOURCE_DIR}/core/*.cpp"
      "${PROJECT_SOURCE_DIR}/ai/*.cpp"
      "${PROJECT_SOURCE_DIR}/demo/*.cpp"
-     "${PROJECT_SOURCE_DIR}/*.qrc" # 如果你有资源文件
+     "${PROJECT_SOURCE_DIR}/demo/*.qrc" # 如果你有资源文件
 )
 
 # Find Qt packages

@@ -8,12 +8,14 @@ FlappyBirdDemo::FlappyBirdDemo(QWidget* parent) : QMainWindow(parent) {
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &FlappyBirdDemo::updateGame);
     timer->start(100);
-
     core = new FlappyBird(windows_size_width, windows_size_height);
 }
 
 void FlappyBirdDemo::paintEvent(QPaintEvent* event) {
     Q_UNUSED(event);
+
+    QPainter painter(this);
+    painter.drawPixmap(0, 0, this->width(), this->height(), QPixmap("../../../asset/background.png"));
 
     drawBird();
     drawPillars();
@@ -32,25 +34,25 @@ void FlappyBirdDemo::drawBird() {
 
 void FlappyBirdDemo::drawPillars() {
     QPainter painter(this);
-    painter.setPen(Qt::NoPen);  // 设置画笔为透明，不绘制边框
-    painter.setBrush(Qt::green);
+    painter.setPen(QPen(QColor("#4D4E55"), 2));
+    painter.setBrush(Qt::transparent);
 
     for (auto& e : core->pillars->pillarHoles) {
         // 上半部分
-        QRectF upperRect(e.first, e.second + core->pillars->hole_size, core->pillars->pillar_width, windows_size_height);
-        QLinearGradient upperGradient(upperRect.topLeft(), upperRect.bottomLeft());
-        upperGradient.setColorAt(0, Qt::darkGreen);
-        upperGradient.setColorAt(0.5, Qt::green);
-        upperGradient.setColorAt(1, Qt::darkGreen);
-        painter.fillRect(upperRect, upperGradient);
+        QRectF upperRect(e.first, e.second + core->pillars->hole_size, core->pillars->pillar_width, windows_size_height - (e.second + core->pillars->hole_size) );
+        QLinearGradient gradient(upperRect.topLeft(), upperRect.topRight());
+        gradient.setColorAt(0, QColor("#7D9844"));
+        gradient.setColorAt(0.2, QColor("#E2FB89"));
+        gradient.setColorAt(0.35, QColor("#E2FB89"));
+        gradient.setColorAt(0.65, QColor("#8DB04B"));
+        gradient.setColorAt(1, QColor("#548021"));
+        painter.fillRect(upperRect, gradient);
+        painter.drawRect(upperRect);
 
         // 下半部分
         QRectF lowerRect(e.first, 0, core->pillars->pillar_width, e.second - core->pillars->hole_size);
-        QLinearGradient lowerGradient(lowerRect.topLeft(), lowerRect.bottomLeft());
-        lowerGradient.setColorAt(0, Qt::darkGreen);
-        lowerGradient.setColorAt(0.5, Qt::green);
-        lowerGradient.setColorAt(1, Qt::darkGreen);
-        painter.fillRect(lowerRect, lowerGradient);
+        painter.fillRect(lowerRect, gradient);
+        painter.drawRect(lowerRect);
     }
 }
 
