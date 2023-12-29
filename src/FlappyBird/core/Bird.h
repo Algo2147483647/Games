@@ -8,22 +8,29 @@ using namespace std;
 
 class Bird {
 public:
-    int speed_y;
+    float g;
+    float up_speed;
+    float speed;
+    float delta_time;
     pair<int, int> windows_size;
-    pair<int, int> position;
+    pair<float, float> position;
 
-    Bird(pair<int, int>& windows_size_) : windows_size(windows_size_) {
-        position = { windows_size.first / 5, windows_size.second / 2 };
-        speed_y = windows_size.second / 50;
+    Bird(pair<int, int>& windows_size_, float g_, float up_speed_, float delta_time_) :
+        windows_size(windows_size_),
+        g(g_),
+        up_speed(up_speed_),
+        delta_time(delta_time_)
+    {
+        position = { windows_size.first / 4.0, windows_size.second / 2.0 };
+        speed = 0;
     }
 
     inline void updateState(bool action) {
         if (action) {
-            position.second += 4 * speed_y;
+            speed = up_speed;
         }
-        else {
-            position.second += -speed_y;
-        }
+        position.second += speed * delta_time - 0.5 * g * delta_time * delta_time;
+        speed -= g * delta_time;
     }
 
     inline bool isDied(Pillars& pillars) {
@@ -34,8 +41,8 @@ public:
         for (auto& e : pillars.pillarHoles) {
             if (position.first >= e.first &&
                 position.first <= e.first + pillars.pillar_width &&
-                (position.second <= e.second - pillars.hole_size / 2 ||
-                 position.second >= e.second + pillars.hole_size / 2)) {
+                (position.second <= e.second - pillars.hole_size_half ||
+                 position.second >= e.second + pillars.hole_size_half)) {
                 return true;
             }
         }

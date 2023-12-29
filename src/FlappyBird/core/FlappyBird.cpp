@@ -1,10 +1,9 @@
 #include "FlappyBird.h"
 
 FlappyBird::FlappyBird(int windows_width, int windows_height) {
-    num_pillars = 1;
+    num_pillars = 2;
     windows_size = { windows_width , windows_height };
-    bird = new Bird(windows_size);
-    pillars = new Pillars(windows_size, num_pillars);
+    init();
 }
 
 bool FlappyBird::play(bool action) {
@@ -21,9 +20,11 @@ bool FlappyBird::isTermination() {
 }
 
 void FlappyBird::init() {
-    delete bird;
-    delete pillars;
+    if(bird != NULL) 
+        delete bird;
+    if (pillars != NULL)
+        delete pillars;
 
-    bird = new Bird(windows_size);
-    pillars = new Pillars(windows_size, num_pillars);
+    bird = new Bird(windows_size, 10.0, 40.0, 0.4);
+    pillars = new Pillars(windows_size, num_pillars, windows_size.first / 100.0);
 }

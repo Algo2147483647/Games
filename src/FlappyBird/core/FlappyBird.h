@@ -10,8 +10,8 @@ class FlappyBird {
 public:
     int num_pillars;
     pair<int, int> windows_size;
-    Bird* bird;
-    Pillars* pillars;
+    Bird* bird = NULL;
+    Pillars* pillars = NULL;
 
     FlappyBird(int windows_width, int windows_height);
 

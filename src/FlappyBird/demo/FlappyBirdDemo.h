@@ -16,13 +16,18 @@ class FlappyBirdDemo : public QMainWindow {
 public:
     int windows_size_width  = 500;
     int windows_size_height = 500;
+    int action = 0;
+    int termination = 0;
 
     QTimer* timer;
     FlappyBird* core;
 
+    QLabel* m_terminationLabel;
+
     FlappyBirdDemo(QWidget* parent = nullptr);
     void drawBird();
     void drawPillars();
+    void displayTermination();
 
 protected:
     void paintEvent(QPaintEvent* event) override;
