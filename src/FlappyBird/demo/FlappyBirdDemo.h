@@ -8,6 +8,7 @@
 #include <QKeyEvent>
 #include <QTimer>
 #include <QImageReader>
+#include <QMessageBox>
 #include "./core/FlappyBird.h"
 #include "./ai/ai.h"
 
@@ -21,7 +22,7 @@ public:
 
     QTimer* timer;
     FlappyBird* core;
-
+    QLearning* ai = NULL;
     QLabel* m_terminationLabel;
 
     FlappyBirdDemo(QWidget* parent = nullptr);

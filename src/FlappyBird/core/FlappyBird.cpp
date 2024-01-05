@@ -1,7 +1,7 @@
 #include "FlappyBird.h"
 
 FlappyBird::FlappyBird(int windows_width, int windows_height) {
-    num_pillars = 2;
+    num_pillars = 1;
     windows_size = { windows_width , windows_height };
     init();
 }

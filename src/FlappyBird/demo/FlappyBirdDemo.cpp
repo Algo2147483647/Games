@@ -111,11 +111,30 @@ void FlappyBirdDemo::displayTermination() {
 
 void FlappyBirdDemo::keyPressEvent(QKeyEvent* event) {
     if (event->key() == Qt::Key_Space) {
-        action = 1;
+        if (ai == NULL) {
+            action = 1;
+        }
+    }
+    if (event->key() == Qt::Key_A) {
+        timer->stop();
+        if (ai == NULL) {
+            QMessageBox pass(QMessageBox::NoIcon, "Confirm AI?", "Do you want a AI?", QMessageBox::Ok | QMessageBox::Cancel);
+
+            if (pass.exec() == QMessageBox::Ok) {
+                ai = training(*core);
+            }
+        }
+        timer->start(20);
     }
 }
 
 void FlappyBirdDemo::updateGame() {
+    if (ai != NULL) {
+        int dx = core->pillars->pillarHoles[0].first;
+        int dy = core->bird->position.second - core->pillars->pillarHoles[0].second;
+        int state = dy * core->windows_size.first + dx;
+        action = ai->chooseAction(state);
+    }
     termination = !core->play(action);
     action = 0;
     update();
