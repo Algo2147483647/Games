@@ -18,7 +18,7 @@ void FlappyBirdDemo::paintEvent(QPaintEvent* event) {
     Q_UNUSED(event);
 
     QPainter painter(this);
-    painter.drawPixmap(0, 0, this->width(), this->height(), QPixmap("../../../asset/background.png"));
+    painter.drawPixmap(0, 0, this->width(), this->height(), QPixmap("./asset/background.png"));
 
     drawBird();
     drawPillars();
