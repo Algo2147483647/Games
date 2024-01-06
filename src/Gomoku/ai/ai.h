@@ -1,8 +1,8 @@
 #ifndef GOBANG_AI_H
 #define GOBANG_AI_H
 
-#include "GoBang.h"
-#include "../../src/MiniMax.h"
+#include "./core/Gomoku.h"
+#include "MiniMax.h"
 
 using namespace GoBang;
 
@@ -22,14 +22,14 @@ namespace GoBang_AI {
 		CHESS& operator()(int i, int j) { return (*board)(i, j); }
 	};
 
-	/*---------------- º¯ÊýÉùÃ÷ ----------------*/
+	/*---------------- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ----------------*/
 	static int evaluate(State& board);
 	static bool newStateFunc(State& board, State& newboard);
 	static CHESS judgeWin(State& board) {
 		return GoBang::judgeWin(*(board.board));
 	};
 
-	/*---------------- AI¼ÆËã½á¹û ----------------*/
+	/*---------------- AIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ----------------*/
 	static void run(State& board, int& x, int& y) {
 		MiniMax<State> AI(evaluate, newStateFunc, judgeWin,
 			[](State& x) { x[x.action] = 0; }, 4
@@ -49,7 +49,7 @@ namespace GoBang_AI {
 		run(boardState, x, y);
 	}
 
-	/*---------------- Æå¾Ö·ÖÊýÆÀ¼Ûº¯Êý ----------------*/
+	/*---------------- ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ûºï¿½ï¿½ï¿½ ----------------*/
 	static int evaluate(State& board) {
 		int reward = 0;
 		const static char 
@@ -87,8 +87,8 @@ namespace GoBang_AI {
 		return reward;
 	}
 
-	/*---------------- Éú³ÉÐÂ×´Ì¬ ----------------*/
-	//Ä¬ÈÏÎå×ÓÆåÁ¬Í¨£¬²»¿¼ÂÇ"·É×Ó"
+	/*---------------- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ ----------------*/
+	//Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"ï¿½ï¿½ï¿½ï¿½"
 	static bool newStateFunc(State& board, State& newboard) {
 		const static char 
 			step_x[] = { 0, 0, 1,-1, 1,-1, 1,-1 },
