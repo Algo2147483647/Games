@@ -1,12 +1,9 @@
-#include "mainwindow.h"
-#include <QApplication>
+#include <QtWidgets/QApplication>
+#include "Demo.h"
 
-int main(int argc, char *argv[])
-{
-    setvbuf(stdout, 0, _IONBF, 0);
+int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    MainWindow w;
+    Demo w;
     w.show();
-
     return a.exec();
 }
