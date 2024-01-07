@@ -1,0 +1,25 @@
+@startuml
+participant "run" as Run
+participant "Policy" as Policy
+participant "updateState" as UpdateState
+participant "evaluate" as Evaluate
+participant "getNumberLineChess" as GetNumberLineChess
+
+Run -> Policy: Call Policy\n with initial state
+activate Policy
+Policy -> UpdateState: Call updateState\n to get next action
+activate UpdateState
+UpdateState --> Policy: Return whether\n state was updated
+deactivate UpdateState
+Policy -> Policy: Recursive call to Policy\n with updated state
+Policy -> Evaluate: Call evaluate if termination\n or max level reached
+activate Evaluate
+Evaluate -> GetNumberLineChess: Call getNumberLineChess\n for each board position
+activate GetNumberLineChess
+GetNumberLineChess --> Evaluate: Return number\n of line chess
+deactivate GetNumberLineChess
+Evaluate --> Policy: Return evaluation score
+deactivate Evaluate
+Policy --> Run: Return final policy score
+deactivate Policy
+@enduml

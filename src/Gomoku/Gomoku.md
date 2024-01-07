@@ -2,24 +2,27 @@
 
 [TOC]
 
-## Concept
+## Entities
 
-### 棋盘  
-A matrix whose value is $\{0, 1, -1\}$.
-$$\boldsymbol B \in \{0, 1, -1\}^{n \times n}, n = 15$$
+### Board
+The game is typically played on a square board with a grid of 15x15 intersections.
+$$
+\boldsymbol B \in \{Empty, Black, White\}^{15 \times 15}
+$$
 
-### 棋子  
-棋子分黑白两色，对局双方各执一色棋子。
-$$s = (x, y, c) \in (1:n, 1:n, \{1, -1\})  \tag{棋分黑白}$$
+### Stones
+The stones are divided into black and white, with each side holding one color piece in the game.
+$$
+action = (x, y, color) \in (1:n, 1:n, \{Black, White\})  \tag{棋分黑白}
+$$
 
-### 连子  
-是由紧邻的同色棋子，构成的线形的连通结构。
+## Rules
 
-## Rule 
+### Actions
+- Players take turns placing one stone of their color on an empty intersection on the board.
+- The player with the black stones usually goes first.
+- After the stone is set, it will no longer move towards other points.
 
-### 空枰开局，交替落子  
-空枰开局，黑先白后，交替着一子于棋盘的点上。
-棋子下定后，不再向其他点移动。
 $$
 \begin{align*}
   s_{1, c} &= 1  \tag{黑先白后}\\
@@ -30,13 +33,26 @@ $$
 \end{align*}
 $$
 
-### 禁手
+### Reward: Five-in-a-row
 
-#### 三三
+- The main goal is to create an unbroken row of five stones of your color horizontally, vertically, or diagonally on the board.
+- The first player to achieve a row of five stones wins the game.
 
-#### 四四
+###  Forbidden Moves
 
-#### 长连
+These rules are designed to prevent certain unfair or overly advantageous situations.
+
+#### Double Three
+
+Placing two sets of three stones in a line with an open end on each side is often forbidden. This rule prevents players from creating multiple potential winning combinations simultaneously, making the game more strategic.
+
+#### Double Four
+
+Similar to the double-three rule, the double-four rule prohibits a player from creating two sets of four stones in a row with an open end on each side. This prevents situations where a player could win by creating two winning sequences simultaneously.
+
+#### Overline
+
+Creating more than five consecutive stones in a row is typically considered a winning move in Five-in-a-row. However, some variations introduce a forbidden hand rule to limit the length of a winning sequence, preventing players from creating an excessively long row of stones.
 
 ### Soosorv-8
 
@@ -47,6 +63,3 @@ $$
 5. The black player puts as many 5th moves on the board as it was declared before. The fifth moves can not be symmetrical.
 6. The white player chooses one 5th from these offerings and plays the 6th move
 
-### 输赢判定  
-
-落子后，当一方存在连子数$\ge 5$时，获胜。
