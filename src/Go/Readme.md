@@ -136,3 +136,14 @@ return hashValue;
 |file name|function|
 |---|---|
 |||
+
+### Operate
+
+- Press mouse left button: move stone
+- Press mouse middle button: return to the previous state
+- Press key P: Pass
+- Press key A: open AI
+- Press key S: display AI evaluation results
+- Press key Q: display qi of each stone
+- Press key N: display order of each stone
+- Press key M: display mark and ID of each stone
