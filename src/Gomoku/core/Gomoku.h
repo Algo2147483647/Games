@@ -4,7 +4,7 @@
 #include "state.h"
 
 namespace Gomoku {
-	inline Color play(State& s, char x, char y) {
+	inline Color play(State& s, short x, short y) {
 		if (!s.setBoard(x, y, s.player)) {
 			return INVALID;
 		}

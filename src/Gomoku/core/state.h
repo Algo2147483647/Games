@@ -10,12 +10,12 @@ namespace Gomoku {
 	static constexpr auto BOARD_SIZE = 15;
 	static constexpr auto BOARD_COLOR_NUM = BOARD_SIZE * BOARD_SIZE;
 
-	enum Color : char {
+	enum Color : short {
 		EMPTY = 0, BLACK = 1, WHITE = -1, INVALID = -2
 	};
 
-	const static char step_x[4] = { 0, 1, 1, 1 };
-	const static char step_y[4] = { 1, 0, 1,-1 };
+	const static short step_x[4] = { 0, 1, 1, 1 };
+	const static short step_y[4] = { 1, 0, 1,-1 };
 
 	class State {
 	public:
@@ -24,6 +24,10 @@ namespace Gomoku {
 
 		State() {
 			fill(board.begin(), board.end(), EMPTY);
+		}
+
+		inline Color& getBoard(int i) {
+			return board[i];
 		}
 
 		inline Color& getBoard(int x, int y) {
@@ -40,6 +44,13 @@ namespace Gomoku {
 			return true;
 		}
 
+		inline bool setBoard(int i, Color color) {
+			if (board[i] != EMPTY)
+				return false;
+			board[i] = color;
+			return true;
+		}
+
 		inline bool isOutBoard(int x, int y) {
 			if (x < 0 || x >= BOARD_SIZE ||
 				y < 0 || y >= BOARD_SIZE)
@@ -48,12 +59,12 @@ namespace Gomoku {
 		}
 
 		inline Color isTermination() {
-			for (char y = 0; y < BOARD_SIZE; y++) {
-				for (char x = 0; x < BOARD_SIZE; x++) {
+			for (short y = 0; y < BOARD_SIZE; y++) {
+				for (short x = 0; x < BOARD_SIZE; x++) {
 					if (getBoard(x, y) == EMPTY)
 						continue;
 
-					for (char k = 0; k < 4; k++) {
+					for (short k = 0; k < 4; k++) {
 						// Has the location been searched
 						int xt = x - step_x[k],
 							yt = y - step_y[k];

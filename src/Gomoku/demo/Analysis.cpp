@@ -34,11 +34,35 @@ void Analysis::displaySerialNumber(vector<Gomoku::State>& ss) {
 }
 
 void Analysis::openAI(Gomoku::State& s) {
-    //if (is_ai_open == false) {
-    //    is_ai_open = true;
-    //    myThread = std::thread(GoAI::MonteCarloTreeSearch, &s);
-    //    myThread.detach();
-    //}
+    is_ai_open = !is_ai_open;
+
+    if (is_ai_open) {
+        int max_reward = Gomoku_AI::run(s);
+        aiEvaluate(s);
+
+        for (int i = 0; i < Gomoku::BOARD_COLOR_NUM; i++) {
+            if (Gomoku_AI::evaluate_result[i] == max_reward && Gomoku_AI::evaluate_result[i] != -0x7FFFFFFF) {
+                int x = i % Gomoku::BOARD_SIZE;
+                int y = i / Gomoku::BOARD_SIZE;
+                x = Board::boardMargin + x * Board::gridSize - (Board::gridSize * 0.8) / 2;
+                y = Board::boardMargin + y * Board::gridSize - (Board::gridSize * 0.8) / 2;
+
+                m_stones[i]->setGeometry(x, y, (Board::gridSize * 0.8), (Board::gridSize * 0.8));
+                m_stones[i]->setStyleSheet("QLabel{background: transparent; border-radius: 16px; border: 1px solid #22B14C;}");
+                m_stones[i]->show();
+            }
+            else {
+                m_stones[i]->hide();
+            }
+        }
+    }
+    else {
+        displayAnalysis();
+        for (int i = 0; i < Gomoku::BOARD_COLOR_NUM; i++) {
+            m_stones[i]->hide();
+        }
+    }
+
     return;
 }
 
@@ -46,13 +70,13 @@ void Analysis::openAI(Gomoku::State& s) {
  *  ÏÔÊ¾AIÆÀ¹À½á¹û
  */
 void Analysis::aiEvaluate(Gomoku::State& s) {
-    //m_labels_string.fill("");
+    m_labels_string.fill("");
 
-    //for (int i = 0; i < Gomoku::BOARD_COLOR_NUM; i++) {
-    //    if (s.mark[i] == -1) {
-    //        m_labels_string[i] = to_string(GoAI::evaluate_result[i] * 100);
-    //    }
-    //}
+    for (int i = 0; i < Gomoku::BOARD_COLOR_NUM; i++) {
+        if (s.getBoard(i) == EMPTY && Gomoku_AI::evaluate_result[i] != -0x7FFFFFFF) {
+            m_labels_string[i] = to_string(Gomoku_AI::evaluate_result[i]);
+        }
+    }
 
     displayAnalysis();
 }

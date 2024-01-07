@@ -21,7 +21,7 @@ public:
         QFont font("Times New Roman", 15, 50, true);
 
         for (int i = 0; i < m_board_size; i++) {
-            char index = 'A' + (char)i;
+            short index = 'A' + (short)i;
 
             QLabel* index_label_x = new QLabel(this);
             QLabel* index_label_y = new QLabel(this);

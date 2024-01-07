@@ -13,8 +13,8 @@ Controller::Controller(QWidget* parent) : QWidget(parent) {
 
 void Controller::mousePressEvent(QMouseEvent* event) {
     if (event->button() == Qt::LeftButton) {
-        signed char x = (event->x() - Board::boardMargin + Board::gridSize / 2) / Board::gridSize;
-        signed char y = (event->y() - Board::boardMargin + Board::gridSize / 2) / Board::gridSize;
+        signed short x = (event->x() - Board::boardMargin + Board::gridSize / 2) / Board::gridSize;
+        signed short y = (event->y() - Board::boardMargin + Board::gridSize / 2) / Board::gridSize;
 
         Gomoku::play(*state, x, y);
         m_state_history.push_back(*state);
@@ -33,10 +33,14 @@ void Controller::mousePressEvent(QMouseEvent* event) {
 void Controller::keyPressEvent(QKeyEvent* event) {
     switch (event->key()) {
     case Qt::Key_A: {
-        QMessageBox pass(QMessageBox::NoIcon, "Confirm AI?", "Open AI?", QMessageBox::Ok | QMessageBox::Cancel);
-
-        if (pass.exec() == QMessageBox::Ok) {
+        if (analysis->is_ai_open) {
             analysis->openAI(*state);
+        }
+        else {
+            QMessageBox pass(QMessageBox::NoIcon, "Confirm AI?", "Open AI?", QMessageBox::Ok | QMessageBox::Cancel);
+            if (pass.exec() == QMessageBox::Ok) {
+                analysis->openAI(*state);
+            }
         }
     } break;
     case Qt::Key_S: analysis->aiEvaluate(*state); break;
